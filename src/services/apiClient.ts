@@ -1,4 +1,5 @@
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://sih26188-g7f9.onrender.com/api';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://al-based-fake-identity-document-i43e.onrender.com/api';
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://rlkyqzbnqtsyjdfcjuac.supabase.co';
 
 export function getToken(): string | null {
   return localStorage.getItem('token');
