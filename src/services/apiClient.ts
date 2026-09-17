@@ -20,8 +20,7 @@ export function getAuthHeaders(): Record<string, string> {
 
 async function handleResponse(response: Response) {
   if (response.status === 401) {
-    removeToken();
-    window.dispatchEvent(new Event('auth:unauthorized'));
+    console.warn('API returned 401 Unauthorized for request');
   }
   
   const text = await response.text();
