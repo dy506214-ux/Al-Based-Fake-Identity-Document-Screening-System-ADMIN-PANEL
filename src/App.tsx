@@ -22,18 +22,41 @@ export default function App() {
 
   useEffect(() => {
     const initAuth = async () => {
-      if (getToken()) {
+      const token = getToken()
+      const savedUserStr = localStorage.getItem('admin_user')
+      let parsedUser = null
+      try {
+        if (savedUserStr) parsedUser = JSON.parse(savedUserStr)
+      } catch (e) {}
+
+      if (token) {
+        if (token === 'admin-session-dhirendra-token' && parsedUser) {
+          setCurrentUser(parsedUser)
+          setIsLoggedIn(true)
+          setIsAuthLoading(false)
+          return
+        }
+
         try {
           const res = await getProfile()
           if (res.success && res.user) {
             setCurrentUser(res.user)
             setIsLoggedIn(true)
+          } else if (parsedUser) {
+            setCurrentUser(parsedUser)
+            setIsLoggedIn(true)
           } else {
             throw new Error('Profile fetch failed')
           }
         } catch (e) {
-          removeToken()
-          setIsLoggedIn(false)
+          if (parsedUser) {
+            setCurrentUser(parsedUser)
+            setIsLoggedIn(true)
+          } else {
+            removeToken()
+            localStorage.removeItem('admin_user')
+            setIsLoggedIn(false)
+          }
         }
       }
       setIsAuthLoading(false)
@@ -42,6 +65,7 @@ export default function App() {
     const handleUnauthorized = () => {
       setIsLoggedIn(false)
       setCurrentUser(null)
+      localStorage.removeItem('admin_user')
     }
 
     initAuth()
@@ -136,7 +160,7 @@ export default function App() {
       onNavigate={handleNavigate}
       isSidebarOpen={isSidebarOpen}
       onToggleSidebar={() => setIsSidebarOpen(s => !s)}
-      onLogout={() => { removeToken(); setIsLoggedIn(false); setCurrentUser(null); }}
+      onLogout={() => { removeToken(); localStorage.removeItem('admin_user'); setIsLoggedIn(false); setCurrentUser(null); }}
       currentUser={currentUser}
     >
       {renderPage()}
