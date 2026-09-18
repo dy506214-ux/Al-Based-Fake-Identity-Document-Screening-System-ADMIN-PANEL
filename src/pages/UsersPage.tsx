@@ -21,7 +21,7 @@ export default function UsersPage({ onReview }: Props) {
 
   // Create User State
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const [createForm, setCreateForm] = useState({ name: '', email: '', password: '', role: 'USER' })
+  const [createForm, setCreateForm] = useState({ name: '', email: '', password: '', role: 'OFFICER' })
   const [showCreatePassword, setShowCreatePassword] = useState(false)
   const [createLoading, setCreateLoading] = useState(false)
   const [createError, setCreateError] = useState('')
@@ -77,15 +77,47 @@ export default function UsersPage({ onReview }: Props) {
     )
   }
 
+  const generateGovEmail = () => {
+    const rawName = createForm.name.trim()
+    let prefix = 'officer'
+    if (rawName) {
+      const parts = rawName.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(/\s+/).filter(Boolean)
+      if (parts.length >= 2) {
+        prefix = `${parts[0]}.${parts[parts.length - 1]}`
+      } else if (parts.length === 1) {
+        prefix = `${parts[0]}.officer`
+      }
+    }
+    const domains = ['dociscan.gov.in', 'gov.in', 'nic.in']
+    const selectedDomain = domains[Math.floor(Math.random() * domains.length)]
+    const emailCandidate = `${prefix}@${selectedDomain}`
+    setCreateForm(prev => ({ ...prev, email: emailCandidate }))
+  }
+
+  const generateGovPassword = () => {
+    const rawName = createForm.name.trim()
+    let base = 'Officer'
+    if (rawName) {
+      const parts = rawName.split(/\s+/)
+      base = parts[0].charAt(0).toUpperCase() + parts[0].slice(1).toLowerCase().replace(/[^a-z]/g, '')
+    }
+    const syms = ['#', '@', '!', '$', '%']
+    const sym = syms[Math.floor(Math.random() * syms.length)]
+    const num = Math.floor(1000 + Math.random() * 9000)
+    const newPass = `${base}${sym}${new Date().getFullYear()}@${num}`
+    setCreateForm(prev => ({ ...prev, password: newPass }))
+    setShowCreatePassword(true)
+  }
+
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault()
     setCreateLoading(true)
     setCreateError('')
     try {
-      const data = await createUser(createForm)
+      const data = await createUser({ ...createForm, role: 'OFFICER' })
       if (data.success) {
         setShowCreateModal(false)
-        setCreateForm({ name: '', email: '', password: '', role: 'USER' })
+        setCreateForm({ name: '', email: '', password: '', role: 'OFFICER' })
         setShowCreatePassword(false)
         loadUsers()
       } else {
@@ -321,14 +353,77 @@ export default function UsersPage({ onReview }: Props) {
             <form onSubmit={handleCreateUser} style={{ display:'flex', flexDirection:'column', gap:12 }}>
               <div>
                 <label style={{ display:'block', fontSize:11, color:'#6b7a40', marginBottom:4 }}>Name</label>
-                <input required className="admin-input" style={{ width:'100%', boxSizing:'border-box' }} value={createForm.name} onChange={e=>setCreateForm({...createForm, name: e.target.value})} />
+                <input
+                  required
+                  className="admin-input"
+                  style={{ width:'100%', boxSizing:'border-box' }}
+                  value={createForm.name}
+                  onChange={e=>setCreateForm({...createForm, name: e.target.value})}
+                  placeholder="e.g. Dhirendra Yadav"
+                />
               </div>
               <div>
-                <label style={{ display:'block', fontSize:11, color:'#6b7a40', marginBottom:4 }}>Email</label>
-                <input required type="email" className="admin-input" style={{ width:'100%', boxSizing:'border-box' }} value={createForm.email} onChange={e=>setCreateForm({...createForm, email: e.target.value})} />
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:4 }}>
+                  <label style={{ fontSize:11, color:'#6b7a40' }}>Email</label>
+                  <button
+                    type="button"
+                    onClick={generateGovEmail}
+                    className="btn-ghost"
+                    style={{
+                      display:'inline-flex',
+                      alignItems:'center',
+                      gap:4,
+                      padding:'2px 8px',
+                      fontSize:10,
+                      fontWeight:700,
+                      color:'#FF9933',
+                      background:'rgba(255,153,51,0.12)',
+                      border:'1px solid rgba(255,153,51,0.3)',
+                      borderRadius:4,
+                      cursor:'pointer',
+                      transition:'all 0.15s ease'
+                    }}
+                    title="Generate Government Email ID based on Name"
+                  >
+                    <span>✨</span> AI Email
+                  </button>
+                </div>
+                <input
+                  required
+                  type="email"
+                  className="admin-input"
+                  style={{ width:'100%', boxSizing:'border-box' }}
+                  value={createForm.email}
+                  onChange={e=>setCreateForm({...createForm, email: e.target.value})}
+                  placeholder="e.g. dhirendra.yadav@dociscan.gov.in"
+                />
               </div>
               <div>
-                <label style={{ display:'block', fontSize:11, color:'#6b7a40', marginBottom:4 }}>Password</label>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:4 }}>
+                  <label style={{ fontSize:11, color:'#6b7a40' }}>Password</label>
+                  <button
+                    type="button"
+                    onClick={generateGovPassword}
+                    className="btn-ghost"
+                    style={{
+                      display:'inline-flex',
+                      alignItems:'center',
+                      gap:4,
+                      padding:'2px 8px',
+                      fontSize:10,
+                      fontWeight:700,
+                      color:'#FF9933',
+                      background:'rgba(255,153,51,0.12)',
+                      border:'1px solid rgba(255,153,51,0.3)',
+                      borderRadius:4,
+                      cursor:'pointer',
+                      transition:'all 0.15s ease'
+                    }}
+                    title="Generate Secure Password via AI"
+                  >
+                    <span>✨</span> AI Password
+                  </button>
+                </div>
                 <div style={{ position:'relative' }}>
                   <input
                     required
@@ -338,6 +433,7 @@ export default function UsersPage({ onReview }: Props) {
                     style={{ width:'100%', boxSizing:'border-box', paddingRight:36 }}
                     value={createForm.password}
                     onChange={e=>setCreateForm({...createForm, password: e.target.value})}
+                    placeholder="••••••••"
                   />
                   <button
                     type="button"
@@ -374,15 +470,18 @@ export default function UsersPage({ onReview }: Props) {
               </div>
               <div>
                 <label style={{ display:'block', fontSize:11, color:'#6b7a40', marginBottom:4 }}>Role</label>
-                <select className="admin-input" style={{ width:'100%', boxSizing:'border-box', background:'#1d2113' }} value={createForm.role} onChange={e=>setCreateForm({...createForm, role: e.target.value})}>
-                  <option value="USER">USER</option>
+                <select
+                  className="admin-input"
+                  style={{ width:'100%', boxSizing:'border-box', background:'#1d2113', cursor:'default' }}
+                  value={createForm.role}
+                  onChange={e=>setCreateForm({...createForm, role: e.target.value})}
+                >
                   <option value="OFFICER">OFFICER</option>
-                  <option value="ADMIN">ADMIN</option>
                 </select>
               </div>
               {createError && <div style={{ fontSize:12, color:'#c87878', marginTop:8 }}>{createError}</div>}
               <div style={{ display:'flex', gap:10, marginTop:16, justifyContent:'flex-end' }}>
-                <button type="button" className="btn-ghost" onClick={()=>setShowCreateModal(false)} style={{ padding:'8px 16px', borderRadius:6 }}>Cancel</button>
+                <button type="button" className="btn-ghost" onClick={()=>{ setShowCreateModal(false); setCreateForm({ name: '', email: '', password: '', role: 'OFFICER' }); }} style={{ padding:'8px 16px', borderRadius:6 }}>Cancel</button>
                 <button type="submit" className="btn-primary" disabled={createLoading} style={{ padding:'8px 16px', borderRadius:6 }}>
                   {createLoading ? 'Creating...' : 'Create User'}
                 </button>
