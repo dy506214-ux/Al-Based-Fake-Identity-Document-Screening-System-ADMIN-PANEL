@@ -241,6 +241,14 @@ body {
 }
 .admin-input:focus { border-color: rgba(255,153,51,0.5); box-shadow: 0 0 0 3px rgba(255,153,51,0.08); }
 .admin-input::placeholder { color: #5a6a40; }
+.admin-input:-webkit-autofill,
+.admin-input:-webkit-autofill:hover, 
+.admin-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #e8e0d0 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #161a0a inset !important;
+  box-shadow: 0 0 0px 1000px #161a0a inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
 
 /* ── Sidebar nav item ────────────────────────────── */
 .nav-item {

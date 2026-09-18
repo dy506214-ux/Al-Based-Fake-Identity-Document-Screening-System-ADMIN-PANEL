@@ -359,11 +359,17 @@ export default function UsersPage({ onReview }: Props) {
         <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000 }}>
           <div className="card-1" style={{ width:400, borderRadius:8, padding:24, background:'#11140c' }}>
             <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#e8e0d0' }}>Create New User</h2>
-            <form onSubmit={handleCreateUser} style={{ display:'flex', flexDirection:'column', gap:12 }}>
+            <form onSubmit={handleCreateUser} autoComplete="off" style={{ display:'flex', flexDirection:'column', gap:12 }}>
+              {/* Trap inputs to prevent browser password manager auto-filling this admin modal */}
+              <input type="text" name="fake_user_trap" style={{ display:'none' }} tabIndex={-1} aria-hidden="true" autoComplete="off" />
+              <input type="password" name="fake_pass_trap" style={{ display:'none' }} tabIndex={-1} aria-hidden="true" autoComplete="new-password" />
+
               <div>
                 <label style={{ display:'block', fontSize:11, color:'#6b7a40', marginBottom:4 }}>Name</label>
                 <input
                   required
+                  name="officer_full_name"
+                  autoComplete="off"
                   className="admin-input"
                   style={{ width:'100%', boxSizing:'border-box' }}
                   value={createForm.name}
@@ -400,6 +406,8 @@ export default function UsersPage({ onReview }: Props) {
                 <input
                   required
                   type="email"
+                  name="officer_gov_email_field"
+                  autoComplete="off"
                   className="admin-input"
                   style={{ width:'100%', boxSizing:'border-box' }}
                   value={createForm.email}
@@ -437,6 +445,8 @@ export default function UsersPage({ onReview }: Props) {
                   <input
                     required
                     type={showCreatePassword ? 'text' : 'password'}
+                    name="officer_secure_pwd_field"
+                    autoComplete="new-password"
                     minLength={6}
                     className="admin-input"
                     style={{ width:'100%', boxSizing:'border-box', paddingRight:36 }}
