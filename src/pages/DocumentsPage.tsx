@@ -174,14 +174,14 @@ export default function DocumentsPage({ onReview, mode = 'all', initialFilter, o
         </div>
 
         {/* Filter controls */}
-        <div style={{ display:'flex', gap:10, alignItems:'center' }}>
-          <div style={{ position:'relative' }}>
+        <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap' }}>
+          <div style={{ position:'relative', minWidth:160, flex:'1 1 180px' }}>
             <input
               className="admin-input"
               placeholder="Search user, ID, type…"
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
-              style={{ width:210, paddingLeft:32 }}
+              style={{ width:'100%', paddingLeft:32, paddingRight:26, fontSize:12 }}
             />
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#5a6a40" strokeWidth="1.5" style={{ position:'absolute', left:10, top:10 }}>
               <circle cx="5.5" cy="5.5" r="4"/><line x1="8.5" y1="8.5" x2="12" y2="12"/>
@@ -197,7 +197,7 @@ export default function DocumentsPage({ onReview, mode = 'all', initialFilter, o
             className="admin-input"
             value={statusFilter}
             onChange={e => { setStatusFilter(e.target.value); setSourceMetric(undefined); setPage(1); }}
-            style={{ width:180 }}
+            style={{ minWidth:130, flex:'1 1 140px', fontSize:12 }}
           >
             <option value="ALL">All Statuses</option>
             <option value="PENDING">Pending Review</option>
@@ -211,9 +211,9 @@ export default function DocumentsPage({ onReview, mode = 'all', initialFilter, o
             className="admin-input"
             value={typeFilter}
             onChange={e => { setTypeFilter(e.target.value); setPage(1); }}
-            style={{ width:160 }}
+            style={{ minWidth:130, flex:'1 1 140px', fontSize:12 }}
           >
-            <option value="All">All Document Types</option>
+            <option value="All">All Types</option>
             <option value="AADHAAR">Aadhaar Card</option>
             <option value="PAN">PAN Card</option>
             <option value="DRIVING_LICENSE">Driving License</option>
@@ -224,7 +224,7 @@ export default function DocumentsPage({ onReview, mode = 'all', initialFilter, o
 
       {/* Active filter chip */}
       {isFiltered && (
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 14px', background:'rgba(74,90,42,0.12)', border:'1px solid rgba(74,90,42,0.25)', borderRadius:6, marginBottom:16 }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 14px', background:'rgba(74,90,42,0.12)', border:'1px solid rgba(74,90,42,0.25)', borderRadius:6, marginBottom:16, flexWrap:'wrap', gap:8 }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:12, color:'#b5c070' }}>
             <span style={{ fontSize:14 }}>⚡</span>
             <span>
@@ -244,8 +244,8 @@ export default function DocumentsPage({ onReview, mode = 'all', initialFilter, o
 
       {/* Main Table Card */}
       <div className="card-2" style={{ flex:1, borderRadius:8, display:'flex', flexDirection:'column', overflow:'hidden' }}>
-        <div style={{ flex:1, overflowY:'auto' }}>
-          <table className="admin-table">
+        <div className="table-responsive-wrapper" style={{ flex:1, overflowY:'auto' }}>
+          <table className="admin-table" style={{ minWidth: 700 }}>
             <thead style={{ position:'sticky', top:0, zIndex:10 }}>
               <tr>
                 <th>Doc ID</th>
@@ -337,7 +337,7 @@ export default function DocumentsPage({ onReview, mode = 'all', initialFilter, o
         </div>
 
         {/* Footer pagination */}
-        <div style={{ padding:'12px 20px', borderTop:'1px solid rgba(74,90,42,0.2)', display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(29,33,19,0.8)' }}>
+        <div style={{ padding:'12px 16px', borderTop:'1px solid rgba(74,90,42,0.2)', display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(29,33,19,0.8)', flexWrap:'wrap', gap:10 }}>
           <div style={{ fontSize:11, color:'#6a7a48' }}>
             {totalCount > 0 ? (
               <>Showing <strong style={{ color:'#e8e0d0' }}>{Math.min((page - 1) * PER_PAGE + 1, totalCount)}</strong> - <strong style={{ color:'#e8e0d0' }}>{Math.min(page * PER_PAGE, totalCount)}</strong> of <strong style={{ color:'#e8e0d0' }}>{totalCount}</strong> documents</>

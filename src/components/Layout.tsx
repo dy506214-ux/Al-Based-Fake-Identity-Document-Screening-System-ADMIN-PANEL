@@ -96,7 +96,7 @@ const NotificationsPanel = ({ onClose, onNavigate }: { onClose: () => void; onNa
   return (
     <>
       <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:49 }}/>
-      <div className="animate-fade-in" style={{ position:'fixed', right:16, top:64, width:380, background:'#141810', border:'1px solid rgba(74,90,42,0.35)', borderRadius:10, zIndex:50, boxShadow:'0 12px 48px rgba(0,0,0,0.7)', overflow:'hidden' }}>
+      <div className="animate-fade-in" style={{ position:'fixed', right:12, top:58, width:360, maxWidth:'calc(100vw - 24px)', background:'#141810', border:'1px solid rgba(74,90,42,0.35)', borderRadius:10, zIndex:50, boxShadow:'0 12px 48px rgba(0,0,0,0.7)', overflow:'hidden' }}>
         <div style={{ padding:'14px 18px 12px', borderBottom:'1px solid rgba(74,90,42,0.2)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <div>
             <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0', display:'flex', alignItems:'center', gap:8 }}>
@@ -174,22 +174,22 @@ export const ProfilePage = ({ currentUser }: { currentUser: BackendUser | null }
   const initials = getInitials(name)
   
   return (
-    <div style={{ padding:'32px', maxWidth:640 }}>
-      <h1 style={{ fontSize:20, fontWeight:700, color:'#e8e0d0', margin:'0 0 24px' }}>Admin Profile</h1>
-      <div className="card-2" style={{ borderRadius:10, padding:'28px', marginBottom:16 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:20, marginBottom:28 }}>
-          <div style={{ width:72, height:72, borderRadius:'50%', background:'linear-gradient(135deg,#4f6128,#2a3218)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:24, fontWeight:800, color:'#e8e0d0', border:'2px solid rgba(255,153,51,0.4)' }}>
+    <div style={{ padding:'16px', maxWidth:640, margin:'0 auto' }}>
+      <h1 style={{ fontSize:18, fontWeight:700, color:'#e8e0d0', margin:'0 0 16px' }}>Admin Profile</h1>
+      <div className="card-2" style={{ borderRadius:10, padding:'20px 16px', marginBottom:16 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:16, marginBottom:20, flexWrap:'wrap' }}>
+          <div style={{ width:64, height:64, borderRadius:'50%', background:'linear-gradient(135deg,#4f6128,#2a3218)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, fontWeight:800, color:'#e8e0d0', border:'2px solid rgba(255,153,51,0.4)', flexShrink:0 }}>
             {initials}
           </div>
           <div>
-            <div style={{ fontSize:20, fontWeight:700, color:'#e8e0d0' }}>{name}</div>
-            <div style={{ fontSize:12, color:'#FF9933', marginTop:3, letterSpacing:'0.06em' }}>{currentUser?.role || 'Unknown'}</div>
-            <span className={currentUser?.isActive ? 'badge-verified' : 'badge-rejected'} style={{ fontSize:10, padding:'2px 8px', borderRadius:3, fontWeight:600, marginTop:6, display:'inline-block' }}>
+            <div style={{ fontSize:18, fontWeight:700, color:'#e8e0d0' }}>{name}</div>
+            <div style={{ fontSize:12, color:'#FF9933', marginTop:2, letterSpacing:'0.06em' }}>{currentUser?.role || 'Unknown'}</div>
+            <span className={currentUser?.isActive ? 'badge-verified' : 'badge-rejected'} style={{ fontSize:10, padding:'2px 8px', borderRadius:3, fontWeight:600, marginTop:4, display:'inline-block' }}>
               {currentUser?.isActive ? 'Active Session' : 'Inactive'}
             </span>
           </div>
         </div>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))', gap:10 }}>
           {[
             ['Admin ID', currentUser?._id ? currentUser._id.substring(0,8).toUpperCase() : 'N/A'],
             ['Email', currentUser?.email || 'N/A'],
@@ -198,19 +198,19 @@ export const ProfilePage = ({ currentUser }: { currentUser: BackendUser | null }
             ['Account Created', currentUser?.createdAt ? new Date(currentUser.createdAt).toLocaleDateString() : 'N/A'],
             ['Status', currentUser?.isActive ? 'Active' : 'Inactive']
           ].map(([l,v]) => (
-            <div key={l} style={{ background:'rgba(42,50,24,0.4)', borderRadius:6, padding:'10px 14px', border:'1px solid rgba(74,90,42,0.15)' }}>
-              <div style={{ fontSize:10, color:'#4a5a30', fontWeight:600, letterSpacing:'0.06em', marginBottom:4 }}>{l.toUpperCase()}</div>
-              <div style={{ fontSize:12, color:'#c8c0b0', fontWeight:500 }}>{v}</div>
+            <div key={l} style={{ background:'rgba(42,50,24,0.4)', borderRadius:6, padding:'10px 12px', border:'1px solid rgba(74,90,42,0.15)', overflow:'hidden' }}>
+              <div style={{ fontSize:9, color:'#4a5a30', fontWeight:600, letterSpacing:'0.06em', marginBottom:3 }}>{l.toUpperCase()}</div>
+              <div style={{ fontSize:11, color:'#c8c0b0', fontWeight:500, wordBreak:'break-word' }}>{v}</div>
             </div>
           ))}
         </div>
       </div>
-      <div className="card-1" style={{ borderRadius:10, padding:'20px' }}>
-        <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0', marginBottom:14 }}>Activity Summary</div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10 }}>
+      <div className="card-1" style={{ borderRadius:10, padding:'16px' }}>
+        <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0', marginBottom:12 }}>Activity Summary</div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(100px, 1fr))', gap:10 }}>
           {[['Documents Reviewed','--','#b5c070'],['Approved','--','#68c87a'],['Rejected','--','#c87878']].map(([l,v,c]) => (
-            <div key={l} style={{ textAlign:'center', padding:'14px', background:`${c}12`, borderRadius:6, border:`1px solid ${c}25` }}>
-              <div style={{ fontSize:22, fontWeight:800, color:String(c) }}>{v}</div>
+            <div key={l} style={{ textAlign:'center', padding:'12px', background:`${c}12`, borderRadius:6, border:`1px solid ${c}25` }}>
+              <div style={{ fontSize:20, fontWeight:800, color:String(c) }}>{v}</div>
               <div style={{ fontSize:10, color:'#5a6a40', marginTop:4 }}>{l}</div>
             </div>
           ))}
@@ -226,37 +226,37 @@ export const SettingsPage = () => {
   const toggle = (k: keyof typeof settings) => setSettings(s => ({ ...s, [k]: !s[k] }))
 
   const Toggle = ({ id, label, desc }: { id: keyof typeof settings; label: string; desc: string }) => (
-    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 0', borderBottom:'1px solid rgba(74,90,42,0.12)' }}>
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 0', borderBottom:'1px solid rgba(74,90,42,0.12)', gap:12 }}>
       <div>
-        <div style={{ fontSize:13, color:'#d0c8b8', fontWeight:500 }}>{label}</div>
-        <div style={{ fontSize:11, color:'#4a5a30', marginTop:2 }}>{desc}</div>
+        <div style={{ fontSize:12, color:'#d0c8b8', fontWeight:500 }}>{label}</div>
+        <div style={{ fontSize:10, color:'#4a5a30', marginTop:2 }}>{desc}</div>
       </div>
-      <div onClick={() => toggle(id)} style={{ width:40, height:22, borderRadius:11, background:settings[id]?'#4f6128':'rgba(42,50,24,0.6)', border:'1px solid rgba(74,90,42,0.35)', cursor:'pointer', position:'relative', transition:'background 0.2s', flexShrink:0 }}>
-        <div style={{ width:16, height:16, borderRadius:'50%', background:'#e8e0d0', position:'absolute', top:2, left:settings[id]?20:2, transition:'left 0.2s', boxShadow:'0 1px 4px rgba(0,0,0,0.4)' }}/>
+      <div onClick={() => toggle(id)} style={{ width:38, height:20, borderRadius:10, background:settings[id]?'#4f6128':'rgba(42,50,24,0.6)', border:'1px solid rgba(74,90,42,0.35)', cursor:'pointer', position:'relative', transition:'background 0.2s', flexShrink:0 }}>
+        <div style={{ width:14, height:14, borderRadius:'50%', background:'#e8e0d0', position:'absolute', top:2, left:settings[id]?20:2, transition:'left 0.2s', boxShadow:'0 1px 4px rgba(0,0,0,0.4)' }}/>
       </div>
     </div>
   )
 
   return (
-    <div style={{ padding:'32px', maxWidth:680 }}>
-      <h1 style={{ fontSize:20, fontWeight:700, color:'#e8e0d0', margin:'0 0 24px' }}>Settings</h1>
-      <div className="card-2" style={{ borderRadius:10, padding:'24px', marginBottom:16 }}>
-        <div style={{ fontSize:13, fontWeight:700, color:'#FF9933', marginBottom:4, letterSpacing:'0.06em' }}>SECURITY</div>
-        <div style={{ fontSize:11, color:'#4a5a30', marginBottom:16 }}>Authentication and access control settings</div>
+    <div style={{ padding:'16px', maxWidth:680, margin:'0 auto' }}>
+      <h1 style={{ fontSize:18, fontWeight:700, color:'#e8e0d0', margin:'0 0 16px' }}>Settings</h1>
+      <div className="card-2" style={{ borderRadius:10, padding:'18px 16px', marginBottom:14 }}>
+        <div style={{ fontSize:12, fontWeight:700, color:'#FF9933', marginBottom:3, letterSpacing:'0.06em' }}>SECURITY</div>
+        <div style={{ fontSize:10, color:'#4a5a30', marginBottom:12 }}>Authentication and access control settings</div>
         <Toggle id="twoFactor"  label="Two-Factor Authentication" desc="Require 2FA for admin login"/>
         <Toggle id="sessionLog" label="Session Activity Logging" desc="Log all admin actions for audit trail"/>
         <Toggle id="strictMode" label="Strict Verification Mode" desc="Require manual confirmation for all decisions"/>
         <Toggle id="apiAccess"  label="API Access" desc="Allow external API integrations"/>
       </div>
-      <div className="card-2" style={{ borderRadius:10, padding:'24px', marginBottom:16 }}>
-        <div style={{ fontSize:13, fontWeight:700, color:'#FF9933', marginBottom:4, letterSpacing:'0.06em' }}>NOTIFICATIONS</div>
-        <div style={{ fontSize:11, color:'#4a5a30', marginBottom:16 }}>Alert and notification preferences</div>
+      <div className="card-2" style={{ borderRadius:10, padding:'18px 16px', marginBottom:14 }}>
+        <div style={{ fontSize:12, fontWeight:700, color:'#FF9933', marginBottom:3, letterSpacing:'0.06em' }}>NOTIFICATIONS</div>
+        <div style={{ fontSize:10, color:'#4a5a30', marginBottom:12 }}>Alert and notification preferences</div>
         <Toggle id="autoNotify"  label="Automatic Alerts" desc="Get notified when documents are submitted"/>
         <Toggle id="emailAlerts" label="Email Notifications" desc="Receive verification summaries via email"/>
       </div>
-      <div className="card-2" style={{ borderRadius:10, padding:'24px' }}>
-        <div style={{ fontSize:13, fontWeight:700, color:'#FF9933', marginBottom:4, letterSpacing:'0.06em' }}>AI ENGINE</div>
-        <div style={{ fontSize:11, color:'#4a5a30', marginBottom:16 }}>AI and OCR processing configuration</div>
+      <div className="card-2" style={{ borderRadius:10, padding:'18px 16px' }}>
+        <div style={{ fontSize:12, fontWeight:700, color:'#FF9933', marginBottom:3, letterSpacing:'0.06em' }}>AI ENGINE</div>
+        <div style={{ fontSize:10, color:'#4a5a30', marginBottom:12 }}>AI and OCR processing configuration</div>
         <Toggle id="aiScan"   label="AI Auto-Scan" desc="Automatically run AI analysis on submission"/>
         <Toggle id="darkMode" label="High Contrast Mode" desc="Enhanced visual contrast for review screens"/>
       </div>
@@ -269,6 +269,15 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
   const [showNotif, setShowNotif] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(getUnreadCount())
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const handleUpdate = () => setUnreadCount(getUnreadCount())
@@ -276,54 +285,99 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
     return () => window.removeEventListener('notifications:updated', handleUpdate)
   }, [])
 
+  const handleNavClick = (pageId: PageType, navId: string) => {
+    onNavigate(pageId, navId)
+    if (isMobile && isSidebarOpen) {
+      onToggleSidebar()
+    }
+  }
+
   return (
-    <div style={{ display:'flex', height:'100%', background:'#0d0f08', fontFamily:'Inter,system-ui,sans-serif' }}>
+    <div style={{ display:'flex', height:'100%', background:'#0d0f08', fontFamily:'Inter,system-ui,sans-serif', position:'relative', overflow:'hidden' }}>
+      {/* ── Mobile Backdrop Overlay ──────────────────── */}
+      {isMobile && isSidebarOpen && (
+        <div
+          onClick={onToggleSidebar}
+          style={{
+            position:'fixed',
+            inset:0,
+            background:'rgba(0,0,0,0.7)',
+            backdropFilter:'blur(3px)',
+            zIndex:45,
+            transition:'opacity 0.25s ease'
+          }}
+        />
+      )}
+
       {/* ── Sidebar ──────────────────────────────────── */}
-      <aside style={{ width:isSidebarOpen?248:64, minWidth:isSidebarOpen?248:64, background:'#080a05', borderRight:'1px solid rgba(74,90,42,0.25)', display:'flex', flexDirection:'column', transition:'width 0.25s ease, min-width 0.25s ease', overflow:'hidden', position:'relative', zIndex:10, boxShadow:'4px 0 24px rgba(0,0,0,0.5)' }}>
+      <aside
+        style={{
+          width: isMobile ? 260 : (isSidebarOpen ? 248 : 64),
+          minWidth: isMobile ? 260 : (isSidebarOpen ? 248 : 64),
+          position: isMobile ? 'fixed' : 'relative',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          zIndex: isMobile ? 50 : 10,
+          transform: isMobile ? (isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none',
+          background:'#080a05',
+          borderRight:'1px solid rgba(74,90,42,0.25)',
+          display:'flex',
+          flexDirection:'column',
+          transition: isMobile ? 'transform 0.25s cubic-bezier(0.16,1,0.3,1)' : 'width 0.25s ease, min-width 0.25s ease',
+          overflow:'hidden',
+          boxShadow: isMobile && isSidebarOpen ? '8px 0 32px rgba(0,0,0,0.8)' : '4px 0 24px rgba(0,0,0,0.5)'
+        }}
+      >
         {/* Logo */}
-        <div style={{ padding:'18px 14px 14px', borderBottom:'1px solid rgba(74,90,42,0.2)', flexShrink:0 }}>
+        <div style={{ padding:'16px 14px 14px', borderBottom:'1px solid rgba(74,90,42,0.2)', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <div style={{ flexShrink:0 }}><ChakraIcon size={30}/></div>
-            {isSidebarOpen && (
+            <div style={{ flexShrink:0 }}><ChakraIcon size={28}/></div>
+            {(isSidebarOpen || isMobile) && (
               <div style={{ overflow:'hidden' }}>
                 <div style={{ fontSize:15, fontWeight:800, color:'#e8e0d0', letterSpacing:'0.03em', lineHeight:1.1 }}>DOCIscan</div>
                 <div style={{ fontSize:9, fontWeight:600, color:'#FF9933', letterSpacing:'0.15em', marginTop:2, textTransform:'uppercase' }}>Admin Portal</div>
               </div>
             )}
           </div>
+          {isMobile && (
+            <button onClick={onToggleSidebar} style={{ background:'none', border:'none', color:'#7a8a58', padding:4, cursor:'pointer', display:'flex', alignItems:'center' }}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>
+            </button>
+          )}
         </div>
 
         {/* Nav */}
         <nav style={{ flex:1, overflowY:'auto', overflowX:'hidden', padding:'10px 8px' }}>
           {(['MAIN','SYSTEM'] as const).map(group => (
             <div key={group} style={{ marginBottom:14 }}>
-              {isSidebarOpen && (
+              {(isSidebarOpen || isMobile) && (
                 <div style={{ fontSize:9, fontWeight:700, letterSpacing:'0.15em', color:'#2a3a14', padding:'0 6px 7px', textTransform:'uppercase' }}>{group}</div>
               )}
               {navRows.filter(r=>r.group===group).map((row,i) => {
                 const isActive = navSelection === row.navId
                 return (
                   <div key={i} className={`nav-item${isActive?' active':''}`}
-                    onClick={() => onNavigate(row.pageId, row.navId)}
-                    style={{ justifyContent:isSidebarOpen?'flex-start':'center', padding:isSidebarOpen?'9px 12px':'9px 0', marginBottom:2 }}
-                    title={!isSidebarOpen?row.label:undefined}
+                    onClick={() => handleNavClick(row.pageId, row.navId)}
+                    style={{ justifyContent:(isSidebarOpen||isMobile)?'flex-start':'center', padding:(isSidebarOpen||isMobile)?'9px 12px':'9px 0', marginBottom:2 }}
+                    title={!isSidebarOpen && !isMobile ? row.label : undefined}
                   >
-                    <span className="nav-accent" style={{ display:isSidebarOpen?'block':'none' }}/>
+                    <span className="nav-accent" style={{ display:(isSidebarOpen||isMobile)?'block':'none' }}/>
                     <span style={{ display:'flex', alignItems:'center', color:'inherit', flexShrink:0 }}>
                       {Icons[row.iconKey]}
                     </span>
-                    {isSidebarOpen && <span style={{ fontSize:13 }}>{row.label}</span>}
+                    {(isSidebarOpen || isMobile) && <span style={{ fontSize:13 }}>{row.label}</span>}
                   </div>
                 )
               })}
               {group === 'SYSTEM' && (
                 <div className="nav-item" onClick={onLogout}
-                  style={{ color:'#7a4040', marginTop:6, justifyContent:isSidebarOpen?'flex-start':'center', padding:isSidebarOpen?'9px 12px':'9px 0' }}
-                  title={!isSidebarOpen?'Logout':undefined}
+                  style={{ color:'#7a4040', marginTop:6, justifyContent:(isSidebarOpen||isMobile)?'flex-start':'center', padding:(isSidebarOpen||isMobile)?'9px 12px':'9px 0' }}
+                  title={!isSidebarOpen && !isMobile ? 'Logout' : undefined}
                 >
-                  <span className="nav-accent" style={{ display:isSidebarOpen?'block':'none', background:'transparent' }}/>
+                  <span className="nav-accent" style={{ display:(isSidebarOpen||isMobile)?'block':'none', background:'transparent' }}/>
                   <span style={{ display:'flex', alignItems:'center', color:'inherit', flexShrink:0 }}>{Icons.logout}</span>
-                  {isSidebarOpen && <span style={{ fontSize:13 }}>Logout</span>}
+                  {(isSidebarOpen || isMobile) && <span style={{ fontSize:13 }}>Logout</span>}
                 </div>
               )}
             </div>
@@ -331,7 +385,7 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
         </nav>
 
         {/* Security indicator */}
-        {isSidebarOpen && (
+        {(isSidebarOpen || isMobile) && (
           <div style={{ padding:'10px 14px', borderTop:'1px solid rgba(74,90,42,0.2)', flexShrink:0 }}>
             <div style={{ display:'flex', alignItems:'center', gap:6 }}>
               <div style={{ width:6, height:6, borderRadius:'50%', background:'#4a9a4a', boxShadow:'0 0 6px #4a9a4a' }}/>
@@ -343,26 +397,28 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
       </aside>
 
       {/* ── Main ─────────────────────────────────────── */}
-      <div style={{ flex:1, display:'flex', flexDirection:'column', minWidth:0, overflow:'hidden' }}>
+      <div style={{ flex:1, display:'flex', flexDirection:'column', minWidth:0, width:'100%', overflow:'hidden' }}>
         {/* Header */}
-        <header style={{ height:54, background:'rgba(8,10,5,0.97)', borderBottom:'1px solid rgba(74,90,42,0.25)', display:'flex', alignItems:'center', gap:14, padding:'0 18px', flexShrink:0, zIndex:9 }}>
+        <header style={{ height:54, background:'rgba(8,10,5,0.97)', borderBottom:'1px solid rgba(74,90,42,0.25)', display:'flex', alignItems:'center', gap:10, padding: isMobile ? '0 12px' : '0 18px', flexShrink:0, zIndex:9 }}>
           <button onClick={onToggleSidebar} style={{ background:'none', border:'none', cursor:'pointer', color:'#7a8a58', padding:4, display:'flex', alignItems:'center' }}>
-            <svg width="17" height="17" viewBox="0 0 17 17" fill="currentColor"><rect y="2.5" width="17" height="1.5" rx="0.75"/><rect y="7.75" width="17" height="1.5" rx="0.75"/><rect y="13" width="17" height="1.5" rx="0.75"/></svg>
+            <svg width="18" height="18" viewBox="0 0 17 17" fill="currentColor"><rect y="2.5" width="17" height="1.5" rx="0.75"/><rect y="7.75" width="17" height="1.5" rx="0.75"/><rect y="13" width="17" height="1.5" rx="0.75"/></svg>
           </button>
 
-          <div style={{ display:'flex', alignItems:'center', gap:7 }}>
-            <span style={{ fontSize:10, color:'#2a3a14', letterSpacing:'0.06em' }}>ADMIN</span>
-            <span style={{ color:'#2a3a14', fontSize:10 }}>›</span>
-            <span style={{ fontSize:14, fontWeight:600, color:'#e8e0d0', letterSpacing:'0.02em' }}>{PAGE_TITLES[navSelection] || PAGE_TITLES[currentPage]}</span>
+          <div style={{ display:'flex', alignItems:'center', gap:5, minWidth:0, overflow:'hidden' }}>
+            <span style={{ fontSize:13, fontWeight:700, color:'#e8e0d0', letterSpacing:'0.02em', whiteSpace:'nowrap', textOverflow:'ellipsis', overflow:'hidden' }}>
+              {PAGE_TITLES[navSelection] || PAGE_TITLES[currentPage]}
+            </span>
           </div>
 
-          <div style={{ flex:1, maxWidth:380, position:'relative' }}>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ position:'absolute', left:9, top:'50%', transform:'translateY(-50%)', color:'#3a4a22' }}>
-              <circle cx="5.5" cy="5.5" r="4" stroke="currentColor" strokeWidth="1.3"/>
-              <line x1="8.5" y1="8.5" x2="12" y2="12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-            </svg>
-            <input className="admin-input" placeholder="Search users, documents…" style={{ width:'100%', padding:'6px 12px 6px 30px', fontSize:12 }}/>
-          </div>
+          {!isMobile && (
+            <div style={{ flex:1, maxWidth:320, position:'relative', marginLeft:10 }}>
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ position:'absolute', left:9, top:'50%', transform:'translateY(-50%)', color:'#3a4a22' }}>
+                <circle cx="5.5" cy="5.5" r="4" stroke="currentColor" strokeWidth="1.3"/>
+                <line x1="8.5" y1="8.5" x2="12" y2="12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+              </svg>
+              <input className="admin-input" placeholder="Search users, documents…" style={{ width:'100%', padding:'6px 12px 6px 30px', fontSize:12 }}/>
+            </div>
+          )}
 
           <div style={{ flex:1 }}/>
 
@@ -420,15 +476,17 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
 
           {/* Admin profile */}
           <div style={{ position:'relative' }}>
-            <div onClick={()=>setProfileOpen(p=>!p)} style={{ display:'flex', alignItems:'center', gap:9, cursor:'pointer', padding:'5px 10px', borderRadius:6, background:'rgba(74,90,42,0.1)', border:'1px solid rgba(74,90,42,0.2)' }}>
-              <div style={{ width:26, height:26, borderRadius:'50%', background:'linear-gradient(135deg,#4f6128,#2a3218)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:700, color:'#e8e0d0', border:'1px solid rgba(255,153,51,0.3)' }}>
+            <div onClick={()=>setProfileOpen(p=>!p)} style={{ display:'flex', alignItems:'center', gap:7, cursor:'pointer', padding:'4px 8px', borderRadius:6, background:'rgba(74,90,42,0.1)', border:'1px solid rgba(74,90,42,0.2)' }}>
+              <div style={{ width:24, height:24, borderRadius:'50%', background:'linear-gradient(135deg,#4f6128,#2a3218)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:700, color:'#e8e0d0', border:'1px solid rgba(255,153,51,0.3)' }}>
                 {currentUser?.name ? currentUser.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : '?'}
               </div>
-              <div>
-                <div style={{ fontSize:11, fontWeight:600, color:'#e8e0d0', lineHeight:1.2 }}>{currentUser?.name || currentUser?.email || 'Unknown User'}</div>
-                <div style={{ fontSize:9, color:'#FF9933', letterSpacing:'0.04em' }}>{currentUser?.role || 'Unknown'}</div>
-              </div>
-              <svg width="9" height="9" viewBox="0 0 9 9" fill="#5a6a40"><polyline points="1.5,3.5 4.5,6.5 7.5,3.5"/></svg>
+              {!isMobile && (
+                <div>
+                  <div style={{ fontSize:11, fontWeight:600, color:'#e8e0d0', lineHeight:1.2 }}>{currentUser?.name || currentUser?.email || 'Unknown'}</div>
+                  <div style={{ fontSize:8, color:'#FF9933', letterSpacing:'0.04em' }}>{currentUser?.role || 'Admin'}</div>
+                </div>
+              )}
+              <svg width="8" height="8" viewBox="0 0 9 9" fill="#5a6a40"><polyline points="1.5,3.5 4.5,6.5 7.5,3.5"/></svg>
             </div>
             {profileOpen && (
               <div style={{ position:'absolute', top:'calc(100% + 6px)', right:0, background:'#141810', border:'1px solid rgba(74,90,42,0.3)', borderRadius:8, padding:8, minWidth:150, zIndex:100, boxShadow:'0 8px 32px rgba(0,0,0,0.6)' }}>
@@ -449,17 +507,20 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
           </div>
 
           {/* Auth badge */}
-          <div style={{ display:'flex', alignItems:'center', gap:5, padding:'4px 8px', background:'rgba(42,60,18,0.3)', borderRadius:4, border:'1px solid rgba(58,138,72,0.2)' }}>
-            <svg width="9" height="9" viewBox="0 0 9 9" fill="#4a9a4a"><path d="M4.5 1L2 2.8v2c0 1.7 1.3 3 2.5 3.2 1.2-.2 2.5-1.5 2.5-3.2V2.8L4.5 1z"/></svg>
-            <span style={{ fontSize:9, color:'#4a9a4a', letterSpacing:'0.06em', fontWeight:600 }}>ADMIN</span>
-          </div>
+          {!isMobile && (
+            <div style={{ display:'flex', alignItems:'center', gap:5, padding:'4px 8px', background:'rgba(42,60,18,0.3)', borderRadius:4, border:'1px solid rgba(58,138,72,0.2)' }}>
+              <svg width="9" height="9" viewBox="0 0 9 9" fill="#4a9a4a"><path d="M4.5 1L2 2.8v2c0 1.7 1.3 3 2.5 3.2 1.2-.2 2.5-1.5 2.5-3.2V2.8L4.5 1z"/></svg>
+              <span style={{ fontSize:9, color:'#4a9a4a', letterSpacing:'0.06em', fontWeight:600 }}>ADMIN</span>
+            </div>
+          )}
         </header>
 
         {/* Content */}
-        <main style={{ flex:1, overflowY:'auto', overflowX:'hidden' }}>
+        <main style={{ flex:1, overflowY:'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch' }}>
           {children}
         </main>
       </div>
     </div>
   )
 }
+

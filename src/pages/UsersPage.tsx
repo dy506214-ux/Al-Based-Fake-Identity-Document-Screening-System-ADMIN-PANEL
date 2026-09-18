@@ -175,36 +175,36 @@ export default function UsersPage({ onReview }: Props) {
   const isAllSelected = users.length > 0 && selectedUserIds.length === users.length
 
   return (
-    <div style={{ display:'flex', height:'100%', position:'relative' }}>
-      <div style={{ flex:1, padding:'24px', overflowY:'auto' }}>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
+    <div style={{ display:'flex', height:'100%', position:'relative', overflow:'hidden' }}>
+      <div style={{ flex:1, padding: '16px', overflowY:'auto', WebkitOverflowScrolling:'touch' }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:10 }}>
           <div>
-            <h1 style={{ fontSize:19, fontWeight:700, color:'#e8e0d0', margin:0 }}>User Management</h1>
-            <p style={{ fontSize:12, color:'#5a6a40', margin:'4px 0 0' }}>{users.length} users found</p>
+            <h1 style={{ fontSize:18, fontWeight:700, color:'#e8e0d0', margin:0 }}>User Management</h1>
+            <p style={{ fontSize:11, color:'#5a6a40', margin:'3px 0 0' }}>{users.length} users found</p>
           </div>
-          <div style={{ display:'flex', gap:10, alignItems:'center' }}>
+          <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap' }}>
             {selectedUserIds.length > 0 && (
-              <div style={{ display:'flex', alignItems:'center', gap:8, background:'rgba(200,120,120,0.12)', border:'1px solid rgba(200,120,120,0.3)', padding:'4px 10px', borderRadius:6 }}>
-                <span style={{ fontSize:12, fontWeight:600, color:'#e8e0d0' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(200,120,120,0.12)', border:'1px solid rgba(200,120,120,0.3)', padding:'4px 8px', borderRadius:6 }}>
+                <span style={{ fontSize:11, fontWeight:600, color:'#e8e0d0' }}>
                   {selectedUserIds.length} Selected
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowBulkDeleteModal(true)}
-                  style={{ background:'#c87878', border:'none', color:'#fff', padding:'4px 10px', borderRadius:4, fontSize:11, fontWeight:700, cursor:'pointer' }}
+                  style={{ background:'#c87878', border:'none', color:'#fff', padding:'3px 8px', borderRadius:4, fontSize:10, fontWeight:700, cursor:'pointer' }}
                 >
                   Delete Selected
                 </button>
                 <button
                   type="button"
                   onClick={() => setSelectedUserIds([])}
-                  style={{ background:'none', border:'none', color:'#8b9a5a', padding:'4px 6px', fontSize:11, cursor:'pointer', textDecoration:'underline' }}
+                  style={{ background:'none', border:'none', color:'#8b9a5a', padding:'2px 4px', fontSize:10, cursor:'pointer', textDecoration:'underline' }}
                 >
                   Deselect
                 </button>
               </div>
             )}
-            <input className="admin-input" placeholder="Search name or email…" value={search} onChange={e=>setSearch(e.target.value)} style={{ width:200 }}/>
+            <input className="admin-input" placeholder="Search name or email…" value={search} onChange={e=>setSearch(e.target.value)} style={{ width:160, padding:'6px 10px', fontSize:12 }}/>
             <button
               className="btn-primary"
               onClick={() => {
@@ -213,7 +213,7 @@ export default function UsersPage({ onReview }: Props) {
                 setCreateError('')
                 setShowCreateModal(true)
               }}
-              style={{ padding:'7px 14px', borderRadius:6, fontSize:12, cursor:'pointer' }}
+              style={{ padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer' }}
             >
               + Create User
             </button>
@@ -221,143 +221,148 @@ export default function UsersPage({ onReview }: Props) {
         </div>
 
         <div className="card-2" style={{ borderRadius:8, overflow:'hidden' }}>
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{ width:40, textAlign:'center', paddingLeft:14, paddingRight:6 }}>
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    onChange={handleToggleSelectAll}
-                    style={{ accentColor:'#FF9933', cursor:'pointer', width:14, height:14 }}
-                    title={isAllSelected ? "Deselect All" : "Select All"}
-                  />
-                </th>
-                <th>User</th>
-                <th>Contact</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Joined</th>
-                <th style={{ textAlign:'right' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan={7} style={{ textAlign:'center', padding:20, color:'#5a6a40' }}>Loading users...</td></tr>
-              ) : users.length === 0 ? (
-                <tr><td colSpan={7} style={{ textAlign:'center', padding:20, color:'#5a6a40' }}>No users found.</td></tr>
-              ) : users.map(u => {
-                const isChecked = selectedUserIds.includes(u._id)
-                return (
-                  <tr key={u._id} style={{ background: isChecked ? 'rgba(255,153,51,0.08)' : selectedUserId === u._id ? 'rgba(74,90,42,0.1)' : 'transparent' }}>
-                    <td style={{ width:40, textAlign:'center', paddingLeft:14, paddingRight:6 }} onClick={e=>e.stopPropagation()}>
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => handleToggleUser(u._id)}
-                        style={{ accentColor:'#FF9933', cursor:'pointer', width:14, height:14 }}
-                        title="Select user"
-                      />
-                    </td>
-                    <td>
-                      <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                        <div style={{ width:28, height:28, borderRadius:'50%', background:'linear-gradient(135deg,#3a4a22,#2a3a18)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#e8e0d0' }}>
-                          {u.name.substring(0,2).toUpperCase()}
+          <div className="table-responsive-wrapper">
+            <table className="admin-table" style={{ minWidth: 640 }}>
+              <thead>
+                <tr>
+                  <th style={{ width:40, textAlign:'center', paddingLeft:14, paddingRight:6 }}>
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      onChange={handleToggleSelectAll}
+                      style={{ accentColor:'#FF9933', cursor:'pointer', width:14, height:14 }}
+                      title={isAllSelected ? "Deselect All" : "Select All"}
+                    />
+                  </th>
+                  <th>User</th>
+                  <th>Contact</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                  <th style={{ textAlign:'right' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan={7} style={{ textAlign:'center', padding:20, color:'#5a6a40' }}>Loading users...</td></tr>
+                ) : users.length === 0 ? (
+                  <tr><td colSpan={7} style={{ textAlign:'center', padding:20, color:'#5a6a40' }}>No users found.</td></tr>
+                ) : users.map(u => {
+                  const isChecked = selectedUserIds.includes(u._id)
+                  return (
+                    <tr key={u._id} style={{ background: isChecked ? 'rgba(255,153,51,0.08)' : selectedUserId === u._id ? 'rgba(74,90,42,0.1)' : 'transparent' }}>
+                      <td style={{ width:40, textAlign:'center', paddingLeft:14, paddingRight:6 }} onClick={e=>e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => handleToggleUser(u._id)}
+                          style={{ accentColor:'#FF9933', cursor:'pointer', width:14, height:14 }}
+                          title="Select user"
+                        />
+                      </td>
+                      <td>
+                        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                          <div style={{ width:28, height:28, borderRadius:'50%', background:'linear-gradient(135deg,#3a4a22,#2a3a18)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#e8e0d0' }}>
+                            {u.name.substring(0,2).toUpperCase()}
+                          </div>
+                          <div>
+                            <div style={{ fontSize:13, fontWeight:600, color:'#e8e0d0' }}>{u.name}</div>
+                            <div style={{ fontSize:10, color:'#5a6a40', marginTop:2 }}>ID: {u._id.substring(0,8)}...</div>
+                          </div>
                         </div>
-                        <div>
-                          <div style={{ fontSize:13, fontWeight:600, color:'#e8e0d0' }}>{u.name}</div>
-                          <div style={{ fontSize:10, color:'#5a6a40', marginTop:2 }}>ID: {u._id.substring(0,8)}...</div>
+                      </td>
+                      <td style={{ color:'#8b9a5a' }}>
+                        <div>{u.email}</div>
+                      </td>
+                      <td style={{ color:'#b5c070', fontWeight:600 }}>{u.role}</td>
+                      <td>
+                        <span className={u.isActive ? 'badge-verified' : 'badge-rejected'}>{u.isActive ? 'Active' : 'Inactive'}</span>
+                      </td>
+                      <td style={{ color:'#5a6a40' }}>{new Date(u.createdAt).toLocaleDateString()}</td>
+                      <td style={{ textAlign:'right' }}>
+                        <div style={{ display:'flex', gap:6, justifyContent:'flex-end' }}>
+                          <button className="btn-ghost" style={{ padding:'4px 9px', borderRadius:4, fontSize:11, cursor:'pointer' }} onClick={() => { setSelectedUserId(u._id); setDrawerTab('info') }}>View</button>
+                          <button className="btn-ghost" style={{ padding:'4px 9px', borderRadius:4, fontSize:11, cursor:'pointer', color:'#c87878' }} onClick={() => setUserToDelete(u)}>Delete</button>
                         </div>
-                      </div>
-                    </td>
-                    <td style={{ color:'#8b9a5a' }}>
-                      <div>{u.email}</div>
-                    </td>
-                    <td style={{ color:'#b5c070', fontWeight:600 }}>{u.role}</td>
-                    <td>
-                      <span className={u.isActive ? 'badge-verified' : 'badge-rejected'}>{u.isActive ? 'Active' : 'Inactive'}</span>
-                    </td>
-                    <td style={{ color:'#5a6a40' }}>{new Date(u.createdAt).toLocaleDateString()}</td>
-                    <td style={{ textAlign:'right' }}>
-                      <div style={{ display:'flex', gap:6, justifyContent:'flex-end' }}>
-                        <button className="btn-ghost" style={{ padding:'4px 9px', borderRadius:4, fontSize:11, cursor:'pointer' }} onClick={() => { setSelectedUserId(u._id); setDrawerTab('info') }}>View</button>
-                        <button className="btn-ghost" style={{ padding:'4px 9px', borderRadius:4, fontSize:11, cursor:'pointer', color:'#c87878' }} onClick={() => setUserToDelete(u)}>Delete</button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       {selectedUserId && selectedUser && (
-        <div style={{ width:340, background:'#11140c', borderLeft:'1px solid rgba(74,90,42,0.2)', display:'flex', flexDirection:'column' }}>
-          <div style={{ padding:'20px 24px', borderBottom:'1px solid rgba(74,90,42,0.2)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-            <h2 style={{ margin:0, fontSize:15, color:'#e8e0d0' }}>User Details</h2>
-            <button className="btn-ghost" onClick={()=>setSelectedUserId(null)} style={{ padding:4, borderRadius:4, cursor:'pointer' }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 1l12 12M13 1L1 13"/></svg>
-            </button>
-          </div>
-          
-          <div style={{ padding:'16px 24px', display:'flex', gap:2 }}>
-            {(['info','docs'] as const).map(t => (
-              <button key={t} onClick={()=>setDrawerTab(t)} style={{ flex:1, padding:'8px 0', background:drawerTab===t ? 'rgba(74,90,42,0.15)' : 'transparent', border:'none', borderBottom: drawerTab===t ? '2px solid #FF9933' : '2px solid transparent', color:drawerTab===t ? '#FF9933' : '#6a7a48', fontSize:11, fontWeight:600, cursor:'pointer' }}>
-                {t==='info'?'Information':'Documents'}
+        <>
+          <div onClick={()=>setSelectedUserId(null)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', backdropFilter:'blur(2px)', zIndex:65 }}/>
+          <div style={{ position:'fixed', right:0, top:0, bottom:0, width:'min(360px, 92vw)', background:'#11140c', borderLeft:'1px solid rgba(74,90,42,0.3)', display:'flex', flexDirection:'column', zIndex:70, boxShadow:'-8px 0 32px rgba(0,0,0,0.8)' }}>
+            <div style={{ padding:'18px 20px', borderBottom:'1px solid rgba(74,90,42,0.2)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+              <h2 style={{ margin:0, fontSize:15, color:'#e8e0d0' }}>User Details</h2>
+              <button className="btn-ghost" onClick={()=>setSelectedUserId(null)} style={{ padding:4, borderRadius:4, cursor:'pointer' }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 1l12 12M13 1L1 13"/></svg>
               </button>
-            ))}
-          </div>
+            </div>
+            
+            <div style={{ padding:'12px 20px', display:'flex', gap:2 }}>
+              {(['info','docs'] as const).map(t => (
+                <button key={t} onClick={()=>setDrawerTab(t)} style={{ flex:1, padding:'8px 0', background:drawerTab===t ? 'rgba(74,90,42,0.15)' : 'transparent', border:'none', borderBottom: drawerTab===t ? '2px solid #FF9933' : '2px solid transparent', color:drawerTab===t ? '#FF9933' : '#6a7a48', fontSize:11, fontWeight:600, cursor:'pointer' }}>
+                  {t==='info'?'Information':'Documents'}
+                </button>
+              ))}
+            </div>
 
-          <div style={{ flex:1, overflowY:'auto', padding:'20px 24px' }}>
-            {drawerTab === 'info' && (
-              <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
-                <div style={{ display:'flex', alignItems:'center', gap:14 }}>
-                  <div style={{ width:48, height:48, borderRadius:'50%', background:'linear-gradient(135deg,#3a4a22,#2a3a18)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:700, color:'#e8e0d0', boxShadow:'0 4px 12px rgba(0,0,0,0.3)' }}>
-                    {selectedUser.name.substring(0,2).toUpperCase()}
-                  </div>
-                  <div>
-                    <div style={{ fontSize:15, fontWeight:700, color:'#e8e0d0' }}>{selectedUser.name}</div>
-                    <div style={{ fontSize:11, color:'#5a6a40', marginTop:2 }}>{selectedUser.role}</div>
-                  </div>
-                </div>
-
-                <div style={{ display:'flex', flexDirection:'column', gap:10, fontSize:12 }}>
-                  <div style={{ fontSize:11, fontWeight:600, color:'#8b9a5a', letterSpacing:'0.06em' }}>ACCOUNT INFO</div>
-                  <div style={{ background:'rgba(74,90,42,0.08)', borderRadius:6, padding:'12px 14px', display:'flex', flexDirection:'column', gap:8 }}>
-                    <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'#6a7a48' }}>Email</span><span style={{ color:'#e8e0d0' }}>{selectedUser.email}</span></div>
-                    <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'#6a7a48' }}>Department</span><span style={{ color:'#e8e0d0' }}>{selectedUser.department || 'N/A'}</span></div>
-                    <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'#6a7a48' }}>Status</span><span className={selectedUser.isActive ? 'badge-verified' : 'badge-rejected'}>{selectedUser.isActive ? 'Active' : 'Inactive'}</span></div>
-                    <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'#6a7a48' }}>Joined</span><span style={{ color:'#e8e0d0' }}>{new Date(selectedUser.createdAt).toLocaleDateString()}</span></div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {drawerTab === 'docs' && (
-              <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-                <div style={{ fontSize:12, fontWeight:600, color:'#8b9a5a', marginBottom:12, letterSpacing:'0.06em' }}>SUBMITTED DOCUMENTS</div>
-                {userDocs.length === 0 ? <p style={{ color:'#3a4a22', fontSize:12 }}>No documents found in recent list.</p> : (
-                  userDocs.map(d => (
-                    <div key={d._id} className="card-2" style={{ padding:12, borderRadius:6, cursor:'pointer' }} onClick={() => onReview(d)}>
-                      <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
-                        <span style={{ fontSize:12, fontWeight:600, color:'#c8c0b0' }}>{d.documentType}</span>
-                        <span className={d.reviewStatus==='PENDING' ? 'badge-pending' : d.reviewStatus==='APPROVED' ? 'badge-verified' : 'badge-rejected'}>{d.reviewStatus}</span>
-                      </div>
-                      <div style={{ fontSize:10, color:'#5a6a40' }}>{new Date(d.uploadedAt).toLocaleString()}</div>
+            <div style={{ flex:1, overflowY:'auto', padding:'16px 20px' }}>
+              {drawerTab === 'info' && (
+                <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                    <div style={{ width:44, height:44, borderRadius:'50%', background:'linear-gradient(135deg,#3a4a22,#2a3a18)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, fontWeight:700, color:'#e8e0d0', boxShadow:'0 4px 12px rgba(0,0,0,0.3)' }}>
+                      {selectedUser.name.substring(0,2).toUpperCase()}
                     </div>
-                  ))
-                )}
-              </div>
-            )}
+                    <div>
+                      <div style={{ fontSize:14, fontWeight:700, color:'#e8e0d0' }}>{selectedUser.name}</div>
+                      <div style={{ fontSize:11, color:'#5a6a40', marginTop:2 }}>{selectedUser.role}</div>
+                    </div>
+                  </div>
+
+                  <div style={{ display:'flex', flexDirection:'column', gap:8, fontSize:12 }}>
+                    <div style={{ fontSize:11, fontWeight:600, color:'#8b9a5a', letterSpacing:'0.06em' }}>ACCOUNT INFO</div>
+                    <div style={{ background:'rgba(74,90,42,0.08)', borderRadius:6, padding:'12px 14px', display:'flex', flexDirection:'column', gap:8 }}>
+                      <div style={{ display:'flex', justifyContent:'space-between', wordBreak:'break-word' }}><span style={{ color:'#6a7a48' }}>Email</span><span style={{ color:'#e8e0d0' }}>{selectedUser.email}</span></div>
+                      <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'#6a7a48' }}>Department</span><span style={{ color:'#e8e0d0' }}>{selectedUser.department || 'N/A'}</span></div>
+                      <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'#6a7a48' }}>Status</span><span className={selectedUser.isActive ? 'badge-verified' : 'badge-rejected'}>{selectedUser.isActive ? 'Active' : 'Inactive'}</span></div>
+                      <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'#6a7a48' }}>Joined</span><span style={{ color:'#e8e0d0' }}>{new Date(selectedUser.createdAt).toLocaleDateString()}</span></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {drawerTab === 'docs' && (
+                <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+                  <div style={{ fontSize:12, fontWeight:600, color:'#8b9a5a', marginBottom:8, letterSpacing:'0.06em' }}>SUBMITTED DOCUMENTS</div>
+                  {userDocs.length === 0 ? <p style={{ color:'#3a4a22', fontSize:12 }}>No documents found in recent list.</p> : (
+                    userDocs.map(d => (
+                      <div key={d._id} className="card-2" style={{ padding:12, borderRadius:6, cursor:'pointer' }} onClick={() => onReview(d)}>
+                        <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
+                          <span style={{ fontSize:12, fontWeight:600, color:'#c8c0b0' }}>{d.documentType}</span>
+                          <span className={d.reviewStatus==='PENDING' ? 'badge-pending' : d.reviewStatus==='APPROVED' ? 'badge-verified' : 'badge-rejected'}>{d.reviewStatus}</span>
+                        </div>
+                        <div style={{ fontSize:10, color:'#5a6a40' }}>{new Date(d.uploadedAt).toLocaleString()}</div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Create User Modal */}
       {showCreateModal && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000 }}>
-          <div className="card-1" style={{ width:400, borderRadius:8, padding:24, background:'#11140c' }}>
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(2px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding: 12 }}>
+          <div className="card-1" style={{ width:'100%', maxWidth:420, borderRadius:8, padding:'20px 16px', background:'#11140c' }}>
             <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#e8e0d0' }}>Create New User</h2>
             <form onSubmit={handleCreateUser} autoComplete="off" style={{ display:'flex', flexDirection:'column', gap:12 }}>
               {/* Trap inputs to prevent browser password manager auto-filling this admin modal */}
@@ -512,8 +517,8 @@ export default function UsersPage({ onReview }: Props) {
 
       {/* Single Delete Confirmation Modal */}
       {userToDelete && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000 }}>
-          <div className="card-1" style={{ width:400, borderRadius:8, padding:24, background:'#11140c' }}>
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(2px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding: 12 }}>
+          <div className="card-1" style={{ width:'100%', maxWidth:420, borderRadius:8, padding:'20px 16px', background:'#11140c' }}>
             <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#c87878' }}>Deactivate User</h2>
             <p style={{ fontSize:13, color:'#b8b098', margin:'0 0 16px' }}>
               Are you sure you want to deactivate the user account for <strong>{userToDelete.name}</strong> ({userToDelete.email})?
@@ -534,8 +539,8 @@ export default function UsersPage({ onReview }: Props) {
 
       {/* Bulk Delete Confirmation Modal */}
       {showBulkDeleteModal && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000 }}>
-          <div className="card-1" style={{ width:420, borderRadius:8, padding:24, background:'#11140c' }}>
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(2px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding: 12 }}>
+          <div className="card-1" style={{ width:'100%', maxWidth:420, borderRadius:8, padding:'20px 16px', background:'#11140c' }}>
             <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#c87878' }}>Delete Selected Users</h2>
             <p style={{ fontSize:13, color:'#b8b098', margin:'0 0 16px' }}>
               Are you sure you want to deactivate <strong>{selectedUserIds.length}</strong> selected user account{selectedUserIds.length > 1 ? 's' : ''}?

@@ -350,27 +350,26 @@ export default function DocumentReviewPage({ doc: initialDoc, onBack }: Props) {
   const reviewerName = typeof currentDoc.reviewedBy === 'object' && currentDoc.reviewedBy ? (currentDoc.reviewedBy as any).name || (currentDoc.reviewedBy as any).email : 'Administrator'
 
   return (
-    <div style={{ padding:'18px 22px', display:'flex', flexDirection:'column', gap:18 }}>
+    <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 1200, margin: '0 auto' }}>
       {/* Top Header */}
-      <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-        <button onClick={onBack} className="btn-ghost" style={{ padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer', display:'flex', alignItems:'center', gap:5 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        <button onClick={onBack} className="btn-ghost" style={{ padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5 }}>
           <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="7.5,2 3,5.5 7.5,9"/></svg>
-          Back to Queue
+          Back
         </button>
-        <div>
-          <h1 style={{ fontSize:17, fontWeight:700, color:'#e8e0d0', margin:0 }}>
-            Document Review — <span style={{ color:'#FF9933' }}>{currentDoc.documentType}</span>
+        <div style={{ flex: '1 1 200px', minWidth: 0 }}>
+          <h1 style={{ fontSize: 16, fontWeight: 700, color: '#e8e0d0', margin: 0, wordBreak: 'break-word' }}>
+            Document Review — <span style={{ color: '#FF9933' }}>{currentDoc.documentType}</span>
           </h1>
-          <p style={{ fontSize:11, color:'#4a5a30', margin:'3px 0 0' }}>
-            User: {uName} · ID: {currentDoc._id} · Submitted: {new Date(currentDoc.uploadedAt || (currentDoc as any).createdAt).toLocaleString()}
+          <p style={{ fontSize: 11, color: '#4a5a30', margin: '3px 0 0', wordBreak: 'break-word' }}>
+            User: {uName} · ID: {currentDoc._id}
           </p>
         </div>
-        <div style={{ flex:1 }}/>
         {confirmed && (
-          <div style={{ padding:'6px 14px', borderRadius:6, fontSize:12, fontWeight:700,
-            background:decision==='APPROVED'?'rgba(58,138,72,0.15)':decision==='REJECTED'?'rgba(138,56,56,0.15)':'rgba(138,100,32,0.15)',
-            border:`1px solid ${decision==='APPROVED'?'rgba(58,138,72,0.3)':decision==='REJECTED'?'rgba(138,56,56,0.3)':'rgba(138,100,32,0.3)'}`,
-            color:decision==='APPROVED'?'#68c87a':decision==='REJECTED'?'#c87878':'#cc9944',
+          <div style={{ padding: '6px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700,
+            background: decision==='APPROVED'?'rgba(58,138,72,0.15)':decision==='REJECTED'?'rgba(138,56,56,0.15)':'rgba(138,100,32,0.15)',
+            border: `1px solid ${decision==='APPROVED'?'rgba(58,138,72,0.3)':decision==='REJECTED'?'rgba(138,56,56,0.3)':'rgba(138,100,32,0.3)'}`,
+            color: decision==='APPROVED'?'#68c87a':decision==='REJECTED'?'#c87878':'#cc9944',
           }}>
             {decision==='APPROVED'?'✓ VERIFIED':decision==='REJECTED'?'✕ SUSPICIOUS / REJECTED':'⚠ FLAGGED FOR REVIEW'}
           </div>
@@ -379,22 +378,22 @@ export default function DocumentReviewPage({ doc: initialDoc, onBack }: Props) {
 
       {/* Success / Error Banners */}
       {successMsg && (
-        <div style={{ padding:'10px 14px', background:'rgba(58,138,72,0.15)', border:'1px solid rgba(58,138,72,0.35)', borderRadius:6, color:'#68c87a', fontSize:12, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ padding: '10px 14px', background: 'rgba(58,138,72,0.15)', border: '1px solid rgba(58,138,72,0.35)', borderRadius: 6, color: '#68c87a', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span>✓ {successMsg}</span>
-          <button onClick={() => setSuccessMsg('')} style={{ background:'none', border:'none', color:'#68c87a', cursor:'pointer' }}>✕</button>
+          <button onClick={() => setSuccessMsg('')} style={{ background: 'none', border: 'none', color: '#68c87a', cursor: 'pointer' }}>✕</button>
         </div>
       )}
       {error && (
-        <div style={{ padding:'10px 14px', background:'rgba(138,56,56,0.15)', border:'1px solid rgba(138,56,56,0.35)', borderRadius:6, color:'#c87878', fontSize:12, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ padding: '10px 14px', background: 'rgba(138,56,56,0.15)', border: '1px solid rgba(138,56,56,0.35)', borderRadius: 6, color: '#c87878', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span>⚠ {error}</span>
-          <button onClick={() => setError('')} style={{ background:'none', border:'none', color:'#c87878', cursor:'pointer' }}>✕</button>
+          <button onClick={() => setError('')} style={{ background: 'none', border: 'none', color: '#c87878', cursor: 'pointer' }}>✕</button>
         </div>
       )}
 
       {/* Document Images Section */}
       <div>
-        <div style={{ fontSize:11, fontWeight:700, color:'#8b9a5a', letterSpacing:'0.1em', marginBottom:10 }}>DOCUMENT IMAGES</div>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#8b9a5a', letterSpacing: '0.1em', marginBottom: 10 }}>DOCUMENT IMAGES</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 }}>
           <ImagePanel
             title="Submitted Document"
             docId={currentDoc._id}
@@ -410,11 +409,11 @@ export default function DocumentReviewPage({ doc: initialDoc, onBack }: Props) {
               filePath={currentDoc.selfiePath}
             />
           ) : (
-            <div className="card-2" style={{ borderRadius:8, display:'flex', flexDirection:'column', overflow:'hidden', flex:1 }}>
-              <div style={{ padding:'11px 14px', borderBottom:'1px solid rgba(74,90,42,0.2)', background:'rgba(26,30,18,0.6)' }}>
-                <div style={{ fontSize:12, fontWeight:700, color:'#e8e0d0' }}>Reference Selfie / Live Photo</div>
+            <div className="card-2" style={{ borderRadius: 8, display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1, minHeight: 240 }}>
+              <div style={{ padding: '11px 14px', borderBottom: '1px solid rgba(74,90,42,0.2)', background: 'rgba(26,30,18,0.6)' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#e8e0d0' }}>Reference Selfie / Live Photo</div>
               </div>
-              <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', color:'#7a8a58', fontSize:12, minHeight:260, padding:16, textAlign:'center', gap:8 }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#7a8a58', fontSize: 12, padding: 16, textAlign: 'center', gap: 8 }}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5a6a40" strokeWidth="1.5">
                   <circle cx="12" cy="7" r="4"/>
                   <path d="M5.5 21a8.38 8.38 0 0 1 13 0"/>
@@ -427,43 +426,42 @@ export default function DocumentReviewPage({ doc: initialDoc, onBack }: Props) {
       </div>
 
       {/* Cross Validation Details */}
-      <div className="card-2" style={{ borderRadius:8, padding:'18px' }}>
-        <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0', marginBottom:3 }}>Cross Validation Details</div>
-        <div style={{ fontSize:11, color:'#5a6a40', marginBottom:14 }}>Comparison of OCR vs Checksum/MRZ data</div>
-        <table className="admin-table" style={{ tableLayout:'fixed' }}>
-          <colgroup>
-            <col style={{ width:'84%' }}/><col style={{ width:'16%' }}/>
-          </colgroup>
-          <thead><tr><th>Field Details</th><th>Result</th></tr></thead>
-          <tbody>
-            {matchedFields.map((f:string) => renderOcrRow(f, 'match'))}
-            {mismatchedFields.map((f:string) => renderOcrRow(f, 'mismatch'))}
-            {matchedFields.length === 0 && mismatchedFields.length === 0 && (
-              <tr><td colSpan={2} style={{ color:'#5a6a40', textAlign:'center', padding:20 }}>No cross-validation data available for this document type.</td></tr>
-            )}
-          </tbody>
-        </table>
+      <div className="card-2" style={{ borderRadius: 8, padding: '16px' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: '#e8e0d0', marginBottom: 3 }}>Cross Validation Details</div>
+        <div style={{ fontSize: 11, color: '#5a6a40', marginBottom: 12 }}>Comparison of OCR vs Checksum/MRZ data</div>
+        <div className="table-responsive-wrapper">
+          <table className="admin-table" style={{ minWidth: 420 }}>
+            <thead><tr><th>Field Details</th><th>Result</th></tr></thead>
+            <tbody>
+              {matchedFields.map((f:string) => renderOcrRow(f, 'match'))}
+              {mismatchedFields.map((f:string) => renderOcrRow(f, 'mismatch'))}
+              {matchedFields.length === 0 && mismatchedFields.length === 0 && (
+                <tr><td colSpan={2} style={{ color: '#5a6a40', textAlign: 'center', padding: 20 }}>No cross-validation data available for this document type.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* AI / Pipeline Analysis */}
-      <div className="card-2" style={{ borderRadius:8, padding:'18px' }}>
-        <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0', marginBottom:3 }}>AI / Pipeline Analysis</div>
-        <div style={{ fontSize:11, color:'#5a6a40', marginBottom:18 }}>Aggregated Evidence Data (Forensic Evidence for Admin Review)</div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16 }}>
+      <div className="card-2" style={{ borderRadius: 8, padding: '16px' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: '#e8e0d0', marginBottom: 3 }}>AI / Pipeline Analysis</div>
+        <div style={{ fontSize: 11, color: '#5a6a40', marginBottom: 16 }}>Aggregated Evidence Data (Forensic Evidence for Admin Review)</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 12 }}>
           <ScoreRing value={authScore}  label="Authenticity Score"  color={authScore>80?'#68c87a':authScore>55?'#cc9944':'#c87878'}/>
           <ScoreRing value={ocrConf}    label="OCR Confidence"      color="#7899cc"/>
           <ScoreRing value={dataMatch}  label="Data Match Score"    color={dataMatch===100?'#68c87a':dataMatch>70?'#cc9944':'#c87878'}/>
           <ScoreRing value={Math.round(faceSimilarity*100)} label="Face Similarity"  color={faceSimilarity>0.8?'#68c87a':faceSimilarity>0.6?'#cc9944':'#c87878'}/>
         </div>
-        <div style={{ marginTop:18, display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10 }}>
+        <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 10 }}>
           {[
             { label:'Tampering Indicators',  value: evidence.tampering?.indicators?.length > 0 ? `${evidence.tampering.indicators.length} indicators flagged` : 'No tampering detected', color:evidence.tampering?.indicators?.length > 0 ?'#c87878':'#68c87a' },
             { label:'Face Verification',  value: faceStatus, color: faceStatus === 'MATCH' ? '#68c87a' : faceStatus === 'NO_MATCH' ? '#c87878' : '#cc9944' },
             { label:'Risk Level',  value: currentDoc.riskLevel || 'LOW',  color: currentDoc.riskLevel === 'CRITICAL' ? '#c87878' : currentDoc.riskLevel === 'HIGH' ? '#e06030' : currentDoc.riskLevel === 'MEDIUM' ? '#cc9944' : '#68c87a' },
           ].map(item => (
-            <div key={item.label} style={{ background:'rgba(42,50,24,0.4)', borderRadius:6, padding:'11px 13px', border:'1px solid rgba(74,90,42,0.18)' }}>
-              <div style={{ fontSize:10, color:'#3a4a22', fontWeight:600, letterSpacing:'0.06em', marginBottom:4 }}>{item.label.toUpperCase()}</div>
-              <div style={{ fontSize:12, color:item.color, fontWeight:600 }}>{item.value}</div>
+            <div key={item.label} style={{ background:'rgba(42,50,24,0.4)', borderRadius:6, padding:'10px 12px', border:'1px solid rgba(74,90,42,0.18)' }}>
+              <div style={{ fontSize:9, color:'#4a5a30', fontWeight:600, letterSpacing:'0.06em', marginBottom:4 }}>{item.label.toUpperCase()}</div>
+              <div style={{ fontSize:11, color:item.color, fontWeight:600 }}>{item.value}</div>
             </div>
           ))}
         </div>
@@ -471,23 +469,23 @@ export default function DocumentReviewPage({ doc: initialDoc, onBack }: Props) {
 
       {/* Verification Result Section */}
       <div>
-        <div style={{ fontSize:11, fontWeight:700, color:'#8b9a5a', letterSpacing:'0.1em', marginBottom:10 }}>VERIFICATION RESULT</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#8b9a5a', letterSpacing: '0.1em', marginBottom: 10 }}>VERIFICATION RESULT</div>
         <ResultCard/>
       </div>
 
       {/* Admin Final Decision Section */}
       {!confirmed ? (
-        <div className="card-3" style={{ borderRadius:8, padding:'22px' }}>
-          <div style={{ fontSize:14, fontWeight:700, color:'#e8e0d0', marginBottom:3 }}>Admin Final Decision</div>
-          <div style={{ fontSize:11, color:'#5a6a40', marginBottom:18 }}>
+        <div className="card-3" style={{ borderRadius: 8, padding: '18px' }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#e8e0d0', marginBottom: 3 }}>Admin Final Decision</div>
+          <div style={{ fontSize: 11, color: '#5a6a40', marginBottom: 16 }}>
             Your decision will be recorded in the system audit trail and update the real-time document verification queue.
           </div>
-          <div style={{ display:'flex', gap:14, flexWrap:'wrap', alignItems:'center' }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
             <button
               className="btn-primary"
               onClick={() => setShowApproveModal(true)}
               disabled={submitting}
-              style={{ padding:'12px 28px', borderRadius:7, fontSize:13, fontWeight:700, cursor:submitting?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:8 }}
+              style={{ padding: '10px 22px', borderRadius: 7, fontSize: 12, fontWeight: 700, cursor: submitting?'not-allowed':'pointer', display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 180px', justifyContent: 'center' }}
             >
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="2.5,7.5 6,11 12.5,4"/></svg>
               APPROVE / VERIFY
@@ -496,7 +494,7 @@ export default function DocumentReviewPage({ doc: initialDoc, onBack }: Props) {
               className="btn-danger"
               onClick={() => setShowRejectModal(true)}
               disabled={submitting}
-              style={{ padding:'12px 28px', borderRadius:7, fontSize:13, fontWeight:700, cursor:submitting?'not-allowed':'pointer', display:'flex', alignItems:'center', gap:8 }}
+              style={{ padding: '10px 22px', borderRadius: 7, fontSize: 12, fontWeight: 700, cursor: submitting?'not-allowed':'pointer', display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 180px', justifyContent: 'center' }}
             >
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="2"><line x1="2.5" y1="2.5" x2="12.5" y2="12.5"/><line x1="12.5" y1="2.5" x2="2.5" y2="12.5"/></svg>
               MARK SUSPICIOUS / REJECT

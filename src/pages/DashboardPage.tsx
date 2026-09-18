@@ -246,22 +246,22 @@ export default function DashboardPage({ onNavigate }: Props) {
   const totalDocs = stats.stats?.documents?.total || 1
 
   return (
-    <div style={{ padding:'22px', display:'flex', flexDirection:'column', gap:20 }}>
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+    <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 1400, margin: '0 auto' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
         <div>
-          <h1 style={{ fontSize:19, fontWeight:700, color:'#e8e0d0', margin:0, letterSpacing:'0.02em' }}>Command Center</h1>
-          <p style={{ fontSize:11, color:'#5a6a40', margin:'4px 0 0' }}>Live Overview</p>
+          <h1 style={{ fontSize: 18, fontWeight: 700, color: '#e8e0d0', margin: 0, letterSpacing: '0.02em' }}>Command Center</h1>
+          <p style={{ fontSize: 11, color: '#5a6a40', margin: '3px 0 0' }}>Live Overview</p>
         </div>
-        <div style={{ display:'flex', gap:8, alignItems:'center' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           {isRefreshing && (
-            <span style={{ fontSize:11, color:'#7a8a58', display:'flex', alignItems:'center', gap:5 }}>
-              <div style={{ width:10, height:10, border:'2px solid rgba(122,138,88,0.2)', borderTopColor:'#b5c070', borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
+            <span style={{ fontSize: 11, color: '#7a8a58', display: 'flex', alignItems: 'center', gap: 5 }}>
+              <div style={{ width: 10, height: 10, border: '2px solid rgba(122,138,88,0.2)', borderTopColor: '#b5c070', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
               Syncing…
             </span>
           )}
           <button
             className="btn-ghost"
-            style={{ padding:'7px 12px', borderRadius:6, fontSize:12, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
+            style={{ padding: '7px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
             onClick={() => loadStats(true)}
             title="Refresh dashboard statistics"
           >
@@ -273,7 +273,7 @@ export default function DashboardPage({ onNavigate }: Props) {
           </button>
           <button
             className="btn-primary"
-            style={{ padding:'7px 13px', borderRadius:6, fontSize:12, cursor:'pointer' }}
+            style={{ padding: '7px 13px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}
             onClick={() => onNavigate('documents', 'verification', { statusFilter: 'PENDING', sourceMetric: 'Review Queue' })}
           >
             Review Queue ({stats.stats?.documents?.pendingReview || 0})
@@ -281,7 +281,7 @@ export default function DashboardPage({ onNavigate }: Props) {
         </div>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
         <KpiCard
           label="Total Users"
           value={stats.stats?.users?.total || 0}
@@ -317,7 +317,7 @@ export default function DashboardPage({ onNavigate }: Props) {
         />
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
         <KpiCard
           label="Suspicious Documents"
           value={stats.stats?.documents?.suspicious || 0}
@@ -347,40 +347,40 @@ export default function DashboardPage({ onNavigate }: Props) {
         />
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 300px', gap:16 }}>
-        <div className="card-2" style={{ borderRadius:8, padding:'18px' }}>
-          <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 }}>
+        <div className="card-2" style={{ borderRadius: 8, padding: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
             <div>
-              <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0' }}>Historical Trends</div>
-              <div style={{ fontSize:11, color:'#5a6a40', marginTop:2 }}>Month-by-month data is unavailable in the backend.</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#e8e0d0' }}>Historical Trends</div>
+              <div style={{ fontSize: 11, color: '#5a6a40', marginTop: 2 }}>Month-by-month data is unavailable in the backend.</div>
             </div>
           </div>
-          <div style={{ height: 210, display:'flex', alignItems:'center', justifyContent:'center', color:'#5a6a40', fontSize: 12 }}>
+          <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5a6a40', fontSize: 12 }}>
             (Chart unavailable - historical aggregate endpoint required)
           </div>
         </div>
 
-        <div className="card-2" style={{ borderRadius:8, padding:'18px' }}>
-          <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0', marginBottom:3 }}>Document Status</div>
-          <div style={{ fontSize:11, color:'#5a6a40', marginBottom:14 }}>All-time breakdown</div>
-          <ResponsiveContainer width="100%" height={155}>
+        <div className="card-2" style={{ borderRadius: 8, padding: '16px' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#e8e0d0', marginBottom: 3 }}>Document Status</div>
+          <div style={{ fontSize: 11, color: '#5a6a40', marginBottom: 12 }}>All-time breakdown</div>
+          <ResponsiveContainer width="100%" height={150}>
             <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={68} paddingAngle={3} dataKey="value">
+              <Pie data={pieData} cx="50%" cy="50%" innerRadius={40} outerRadius={62} paddingAngle={3} dataKey="value">
                 {pieData.map((e,i) => <Cell key={i} fill={PIE_COLORS[i%PIE_COLORS.length]} stroke="rgba(255,255,255,0.05)"/>)}
               </Pie>
-              <Tooltip contentStyle={{ background:'#1d2113', border:'1px solid rgba(74,90,42,0.35)', borderRadius:6, fontSize:12, color:'#e8e0d0' }} itemStyle={{ color:'#e8e0d0' }}/>
+              <Tooltip contentStyle={{ background: '#1d2113', border: '1px solid rgba(74,90,42,0.35)', borderRadius: 6, fontSize: 12, color: '#e8e0d0' }} itemStyle={{ color: '#e8e0d0' }}/>
             </PieChart>
           </ResponsiveContainer>
-          <div style={{ display:'flex', flexDirection:'column', gap:6, marginTop:8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 8 }}>
             {pieData.map((d,i) => (
-              <div key={d.name} style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                <div style={{ display:'flex', alignItems:'center', gap:6 }}>
-                  <div style={{ width:8, height:8, borderRadius:2, background:PIE_COLORS[i%PIE_COLORS.length] }}/>
-                  <span style={{ fontSize:11, color:'#7a8a58' }}>{d.name}</span>
+              <div key={d.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: 2, background: PIE_COLORS[i%PIE_COLORS.length] }}/>
+                  <span style={{ fontSize: 11, color: '#7a8a58' }}>{d.name}</span>
                 </div>
-                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                  <span style={{ fontSize:11, fontWeight:600, color:'#b5c070' }}>{d.value}</span>
-                  <span style={{ fontSize:10, color:'#4a5a30' }}>{((d.value/totalDocs)*100).toFixed(1)}%</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: '#b5c070' }}>{d.value}</span>
+                  <span style={{ fontSize: 10, color: '#4a5a30' }}>{((d.value/totalDocs)*100).toFixed(1)}%</span>
                 </div>
               </div>
             ))}
@@ -388,21 +388,21 @@ export default function DashboardPage({ onNavigate }: Props) {
         </div>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-        <div className="card-2" style={{ borderRadius:8, padding:'16px' }}>
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', paddingBottom:12, borderBottom:'1px solid rgba(74,90,42,0.2)', marginBottom:12 }}>
-            <div style={{ fontSize:12, fontWeight:700, color:'#e8e0d0', letterSpacing:'0.04em' }}>RECENT AUDIT LOGS</div>
-            <button className="btn-ghost" style={{ fontSize:11, padding:'4px 8px', borderRadius:4, cursor:'pointer' }} onClick={() => onNavigate('history')}>View All</button>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 14 }}>
+        <div className="card-2" style={{ borderRadius: 8, padding: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12, borderBottom: '1px solid rgba(74,90,42,0.2)', marginBottom: 12 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#e8e0d0', letterSpacing: '0.04em' }}>RECENT AUDIT LOGS</div>
+            <button className="btn-ghost" style={{ fontSize: 11, padding: '4px 8px', borderRadius: 4, cursor: 'pointer' }} onClick={() => onNavigate('history')}>View All</button>
           </div>
-          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {(stats.recentAuditLogs || []).slice(0,6).map(a => (
-              <div key={a._id} style={{ display:'flex', gap:12, alignItems:'flex-start' }}>
-                <div style={{ width:6, height:6, borderRadius:'50%', background:'#5a6a40', marginTop:6, flexShrink:0 }}/>
-                <div>
-                  <div style={{ fontSize:11, color:'#b5c070', lineHeight:1.4 }}>
-                    <span style={{ fontWeight:600, color:'#e8e0d0' }}>{a.actorEmail}</span> {a.action} on {a.resource} ({a.status})
+              <div key={a._id} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#5a6a40', marginTop: 6, flexShrink: 0 }}/>
+                <div style={{ overflow: 'hidden', minWidth: 0 }}>
+                  <div style={{ fontSize: 11, color: '#b5c070', lineHeight: 1.4, wordBreak: 'break-word' }}>
+                    <span style={{ fontWeight: 600, color: '#e8e0d0' }}>{a.actorEmail}</span> {a.action} on {a.resource} ({a.status})
                   </div>
-                  <div style={{ fontSize:10, color:'#4a5a30', marginTop:2 }}>{new Date(a.createdAt).toLocaleString()}</div>
+                  <div style={{ fontSize: 10, color: '#4a5a30', marginTop: 2 }}>{new Date(a.createdAt).toLocaleString()}</div>
                 </div>
               </div>
             ))}

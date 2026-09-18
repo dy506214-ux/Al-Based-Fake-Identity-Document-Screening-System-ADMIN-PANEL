@@ -78,47 +78,47 @@ export default function NotificationsPage({ onNavigate }: Props) {
   }
 
   return (
-    <div style={{ padding: '24px', maxWidth: 960, margin: '0 auto' }}>
+    <div style={{ padding: '16px', maxWidth: 960, margin: '0 auto' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <h1 style={{ fontSize: 20, fontWeight: 700, color: '#e8e0d0', margin: 0 }}>Notification Center</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <h1 style={{ fontSize: 18, fontWeight: 700, color: '#e8e0d0', margin: 0 }}>Notification Center</h1>
             {unreadCount > 0 && (
-              <span style={{ fontSize: 11, fontWeight: 700, background: '#FF9933', color: '#060803', padding: '2px 8px', borderRadius: 12 }}>
+              <span style={{ fontSize: 10, fontWeight: 700, background: '#FF9933', color: '#060803', padding: '2px 8px', borderRadius: 12 }}>
                 {unreadCount} Unread
               </span>
             )}
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#68c87a', background: 'rgba(104,200,122,0.12)', border: '1px solid rgba(104,200,122,0.25)', padding: '2px 8px', borderRadius: 12 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#68c87a', background: 'rgba(104,200,122,0.12)', border: '1px solid rgba(104,200,122,0.25)', padding: '2px 8px', borderRadius: 12 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#68c87a', animation: 'pulse 1.5s infinite' }} />
               Live Stream Active
             </span>
           </div>
-          <p style={{ fontSize: 12, color: '#5a6a40', margin: '4px 0 0' }}>Real-time alerts, screening flags, and system verification logs</p>
+          <p style={{ fontSize: 11, color: '#5a6a40', margin: '3px 0 0' }}>Real-time alerts, screening flags, and system verification logs</p>
         </div>
 
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button
             onClick={handleSimulateAlert}
             className="btn-ghost"
-            style={{ padding: '7px 12px', fontSize: 11, borderRadius: 6, color: '#FF9933', border: '1px solid rgba(255,153,51,0.3)', cursor: 'pointer' }}
+            style={{ padding: '6px 10px', fontSize: 11, borderRadius: 6, color: '#FF9933', border: '1px solid rgba(255,153,51,0.3)', cursor: 'pointer' }}
           >
-            ⚡ Trigger Live Test Alert
+            ⚡ Test Alert
           </button>
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
               className="btn-ghost"
-              style={{ padding: '7px 12px', fontSize: 11, borderRadius: 6, cursor: 'pointer' }}
+              style={{ padding: '6px 10px', fontSize: 11, borderRadius: 6, cursor: 'pointer' }}
             >
-              Mark all as read
+              Mark all read
             </button>
           )}
           {notifications.length > 0 && (
             <button
               onClick={clearAllNotifications}
               className="btn-ghost"
-              style={{ padding: '7px 12px', fontSize: 11, borderRadius: 6, color: '#c87878', cursor: 'pointer' }}
+              style={{ padding: '6px 10px', fontSize: 11, borderRadius: 6, color: '#c87878', cursor: 'pointer' }}
             >
               Clear All
             </button>
@@ -127,14 +127,14 @@ export default function NotificationsPage({ onNavigate }: Props) {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="card-1" style={{ borderRadius: 8, padding: '12px 16px', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 4 }}>
+      <div className="card-1" style={{ borderRadius: 8, padding: '10px 14px', marginBottom: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
           {(['ALL', 'UNREAD', 'CRITICAL', 'VERIFIED', 'SYSTEM'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setFilterTab(tab)}
               style={{
-                padding: '6px 14px',
+                padding: '5px 10px',
                 borderRadius: 5,
                 fontSize: 11,
                 fontWeight: 600,
@@ -145,7 +145,7 @@ export default function NotificationsPage({ onNavigate }: Props) {
                 transition: 'all 0.15s ease'
               }}
             >
-              {tab === 'ALL' ? 'All Alerts' : tab.charAt(0) + tab.slice(1).toLowerCase()}
+              {tab === 'ALL' ? 'All' : tab.charAt(0) + tab.slice(1).toLowerCase()}
             </button>
           ))}
         </div>
@@ -155,7 +155,7 @@ export default function NotificationsPage({ onNavigate }: Props) {
           placeholder="Filter notifications…"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          style={{ width: 220, padding: '6px 10px', fontSize: 12 }}
+          style={{ width: '100%', maxWidth: 220, padding: '5px 10px', fontSize: 11 }}
         />
       </div>
 
