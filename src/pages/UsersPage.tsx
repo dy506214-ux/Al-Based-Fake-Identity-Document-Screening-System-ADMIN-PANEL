@@ -205,7 +205,16 @@ export default function UsersPage({ onReview }: Props) {
               </div>
             )}
             <input className="admin-input" placeholder="Search name or email…" value={search} onChange={e=>setSearch(e.target.value)} style={{ width:200 }}/>
-            <button className="btn-primary" onClick={() => setShowCreateModal(true)} style={{ padding:'7px 14px', borderRadius:6, fontSize:12, cursor:'pointer' }}>
+            <button
+              className="btn-primary"
+              onClick={() => {
+                setCreateForm({ name: '', email: '', password: '', role: 'OFFICER' })
+                setShowCreatePassword(false)
+                setCreateError('')
+                setShowCreateModal(true)
+              }}
+              style={{ padding:'7px 14px', borderRadius:6, fontSize:12, cursor:'pointer' }}
+            >
               + Create User
             </button>
           </div>
@@ -359,7 +368,7 @@ export default function UsersPage({ onReview }: Props) {
                   style={{ width:'100%', boxSizing:'border-box' }}
                   value={createForm.name}
                   onChange={e=>setCreateForm({...createForm, name: e.target.value})}
-                  placeholder="e.g. Dhirendra Yadav"
+                  placeholder=""
                 />
               </div>
               <div>
@@ -395,7 +404,7 @@ export default function UsersPage({ onReview }: Props) {
                   style={{ width:'100%', boxSizing:'border-box' }}
                   value={createForm.email}
                   onChange={e=>setCreateForm({...createForm, email: e.target.value})}
-                  placeholder="e.g. dhirendra.yadav@dociscan.gov.in"
+                  placeholder=""
                 />
               </div>
               <div>
@@ -433,7 +442,7 @@ export default function UsersPage({ onReview }: Props) {
                     style={{ width:'100%', boxSizing:'border-box', paddingRight:36 }}
                     value={createForm.password}
                     onChange={e=>setCreateForm({...createForm, password: e.target.value})}
-                    placeholder="••••••••"
+                    placeholder=""
                   />
                   <button
                     type="button"
