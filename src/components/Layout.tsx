@@ -546,6 +546,7 @@ export const SettingsPage = () => {
 export default function Layout({ currentPage, navSelection, onNavigate, isSidebarOpen, onToggleSidebar, onLogout, currentUser, children }: LayoutProps) {
   const [showNotif, setShowNotif] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [unreadCount, setUnreadCount] = useState(getUnreadCount())
   const [headerAvatar, setHeaderAvatar] = useState<string | null>(() => typeof window !== 'undefined' ? localStorage.getItem('admin_avatar') : null)
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false)
@@ -658,8 +659,8 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
                 )
               })}
               {group === 'SYSTEM' && (
-                <div className="nav-item" onClick={onLogout}
-                  style={{ color:'#7a4040', marginTop:6, justifyContent:(isSidebarOpen||isMobile)?'flex-start':'center', padding:(isSidebarOpen||isMobile)?'9px 12px':'9px 0' }}
+                <div className="nav-item" onClick={() => setShowLogoutConfirm(true)}
+                  style={{ color:'#c87878', marginTop:6, justifyContent:(isSidebarOpen||isMobile)?'flex-start':'center', padding:(isSidebarOpen||isMobile)?'9px 12px':'9px 0', cursor:'pointer' }}
                   title={!isSidebarOpen && !isMobile ? 'Logout' : undefined}
                 >
                   <span className="nav-accent" style={{ display:(isSidebarOpen||isMobile)?'block':'none', background:'transparent' }}/>
@@ -789,7 +790,7 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
                   >{label}</div>
                 ))}
                 <div style={{ height:1, background:'rgba(74,90,42,0.2)', margin:'4px 0' }}/>
-                <div onClick={onLogout} style={{ padding:'8px 12px', fontSize:12, color:'#c87878', borderRadius:4, cursor:'pointer' }}
+                <div onClick={() => { setProfileOpen(false); setShowLogoutConfirm(true); }} style={{ padding:'8px 12px', fontSize:12, color:'#c87878', borderRadius:4, cursor:'pointer' }}
                   onMouseOver={e=>(e.currentTarget.style.background='rgba(138,56,56,0.12)')}
                   onMouseOut={e=>(e.currentTarget.style.background='transparent')}
                 >Sign Out</div>
@@ -811,6 +812,155 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
           {children}
         </main>
       </div>
+
+      {/* ── Logout Confirmation Modal ──────────────── */}
+      {showLogoutConfirm && (
+        <div
+          style={{
+            position:'fixed',
+            inset:0,
+            background:'rgba(0,0,0,0.75)',
+            backdropFilter:'blur(4px)',
+            display:'flex',
+            alignItems:'center',
+            justifyContent:'center',
+            zIndex:1000,
+            padding:16,
+            animation:'fadeIn 0.15s ease'
+          }}
+          onClick={() => setShowLogoutConfirm(false)}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              width:'100%',
+              maxWidth:400,
+              background:'#12160d',
+              border:'1px solid rgba(200,120,120,0.35)',
+              borderRadius:10,
+              padding:'22px 20px',
+              boxShadow:'0 16px 48px rgba(0,0,0,0.8), 0 0 24px rgba(200,80,80,0.12)',
+              position:'relative'
+            }}
+          >
+            {/* Header Icon + Title */}
+            <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:14 }}>
+              <div
+                style={{
+                  width:42,
+                  height:42,
+                  borderRadius:'50%',
+                  background:'rgba(200,80,80,0.14)',
+                  border:'1px solid rgba(200,80,80,0.35)',
+                  display:'flex',
+                  alignItems:'center',
+                  justifyContent:'center',
+                  color:'#c87878',
+                  flexShrink:0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                  <path d="M5.5 13H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h2.5M10 11l3-3-3-3M13 7.5H6"/>
+                </svg>
+              </div>
+              <div>
+                <h3 style={{ margin:0, fontSize:16, fontWeight:700, color:'#e8e0d0' }}>
+                  Confirm Sign Out
+                </h3>
+                <p style={{ margin:'2px 0 0', fontSize:11, color:'#7a8a58' }}>
+                  DOCIscan Admin Session
+                </p>
+              </div>
+            </div>
+
+            {/* Description */}
+            <p style={{ fontSize:13, color:'#c8c0b0', lineHeight:1.45, margin:'0 0 14px' }}>
+              Are you sure you want to log out of your admin account? You will need your credentials to access the portal again.
+            </p>
+
+            {/* User Details Preview Box */}
+            <div
+              style={{
+                background:'rgba(30,36,20,0.5)',
+                border:'1px solid rgba(74,90,42,0.25)',
+                borderRadius:6,
+                padding:'10px 12px',
+                display:'flex',
+                alignItems:'center',
+                gap:10,
+                marginBottom:18
+              }}
+            >
+              <div
+                style={{
+                  width:32,
+                  height:32,
+                  borderRadius:'50%',
+                  background:'linear-gradient(135deg,#4f6128,#2a3218)',
+                  display:'flex',
+                  alignItems:'center',
+                  justifyContent:'center',
+                  fontSize:12,
+                  fontWeight:700,
+                  color:'#e8e0d0',
+                  border:'1px solid rgba(255,153,51,0.3)',
+                  overflow:'hidden',
+                  flexShrink:0
+                }}
+              >
+                {headerAvatar ? (
+                  <img src={headerAvatar} alt="Avatar" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                ) : (
+                  currentUser?.name ? currentUser.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : '?'
+                )}
+              </div>
+              <div style={{ overflow:'hidden' }}>
+                <div style={{ fontSize:12, fontWeight:600, color:'#e8e0d0', textOverflow:'ellipsis', overflow:'hidden', whiteSpace:'nowrap' }}>
+                  {currentUser?.name || currentUser?.email || 'Administrator'}
+                </div>
+                <div style={{ fontSize:10, color:'#FF9933', marginTop:1 }}>
+                  {currentUser?.role || 'SUPER_ADMIN'}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display:'flex', gap:10, justifyContent:'flex-end' }}>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => setShowLogoutConfirm(false)}
+                style={{ padding:'8px 16px', borderRadius:6, fontSize:12, cursor:'pointer' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowLogoutConfirm(false);
+                  onLogout();
+                }}
+                style={{
+                  padding:'8px 18px',
+                  borderRadius:6,
+                  fontSize:12,
+                  fontWeight:700,
+                  background:'linear-gradient(135deg,#c84040,#9e2828)',
+                  color:'#ffffff',
+                  border:'1px solid rgba(255,120,120,0.4)',
+                  cursor:'pointer',
+                  boxShadow:'0 2px 10px rgba(200,60,60,0.35)',
+                  transition:'all 0.15s ease'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(200,60,60,0.5)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 10px rgba(200,60,60,0.35)' }}
+              >
+                Yes, Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
