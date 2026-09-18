@@ -1,5 +1,6 @@
 import { apiGet, apiPost } from './apiClient';
 import { BackendDocument } from '../types';
+import { getStoredDocuments, saveStoredDocuments } from './adminApi';
 
 export async function getPendingReviews(page: number = 1, limit: number = 20) {
   try {
@@ -7,10 +8,11 @@ export async function getPendingReviews(page: number = 1, limit: number = 20) {
     if (data && data.success) return data;
   } catch (err) {}
 
+  const pending = getStoredDocuments().filter(d => d.reviewStatus === 'PENDING');
   return {
     success: true,
-    documents: [],
-    totalPending: 0
+    documents: pending,
+    totalPending: pending.length
   };
 }
 
@@ -20,9 +22,10 @@ export async function getDocumentDetails(id: string) {
     if (data && data.success) return data;
   } catch (err) {}
 
+  const doc = getStoredDocuments().find(d => d._id === id) || null;
   return {
     success: true,
-    document: null
+    document: doc
   };
 }
 
@@ -32,9 +35,10 @@ export async function getDocumentForReview(id: string) {
     if (data && data.success) return data;
   } catch (err) {}
 
+  const doc = getStoredDocuments().find(d => d._id === id) || null;
   return {
     success: true,
-    document: null
+    document: doc
   };
 }
 
@@ -48,6 +52,16 @@ export async function submitReview(id: string, decision: string, comment?: strin
     });
     if (data && data.success) return data;
   } catch (err) {}
+
+  const docs = getStoredDocuments();
+  const target = docs.find(d => d._id === id);
+  if (target) {
+    target.reviewStatus = decision;
+    target.reviewDecision = decision;
+    target.reviewComment = comment || '';
+    target.reviewedAt = new Date().toISOString();
+    saveStoredDocuments(docs);
+  }
 
   return {
     success: true,

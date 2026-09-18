@@ -1,8 +1,11 @@
 import { apiGet, apiPost, apiDelete } from './apiClient';
 import { BackendStats, BackendDocument, BackendUser, BackendAuditLog } from '../types';
 
-// Mock datasets for offline / local admin mode / fallback
-const MOCK_USERS: BackendUser[] = [
+const USERS_STORAGE_KEY = 'dociscan_admin_users_list';
+const DOCS_STORAGE_KEY = 'dociscan_admin_docs_list';
+
+// Initial Mock datasets
+const MOCK_USERS_INITIAL: BackendUser[] = [
   { _id: 'usr-101', name: 'Aarav Sharma', email: 'aarav.sharma@example.com', role: 'USER', isActive: true, department: 'Finance Verification', createdAt: new Date(Date.now() - 86400000 * 12).toISOString() },
   { _id: 'usr-102', name: 'Priya Patel', email: 'priya.patel@example.com', role: 'USER', isActive: true, department: 'Identity KYC', createdAt: new Date(Date.now() - 86400000 * 10).toISOString() },
   { _id: 'usr-103', name: 'Rohan Verma', email: 'rohan.verma@example.com', role: 'USER', isActive: true, department: 'Operations', createdAt: new Date(Date.now() - 86400000 * 8).toISOString() },
@@ -11,10 +14,30 @@ const MOCK_USERS: BackendUser[] = [
   { _id: 'usr-106', name: 'Ananya Roy', email: 'ananya.roy@example.com', role: 'USER', isActive: true, department: 'Identity KYC', createdAt: new Date(Date.now() - 86400000 * 2).toISOString() },
 ];
 
-const MOCK_DOCUMENTS: BackendDocument[] = [
+export function getStoredUsers(): BackendUser[] {
+  try {
+    const raw = localStorage.getItem(USERS_STORAGE_KEY);
+    if (raw !== null) {
+      return JSON.parse(raw);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  return MOCK_USERS_INITIAL;
+}
+
+export function saveStoredUsers(users: BackendUser[]) {
+  try {
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+const MOCK_DOCUMENTS_INITIAL: BackendDocument[] = [
   {
     _id: 'doc-801',
-    user: MOCK_USERS[0],
+    user: MOCK_USERS_INITIAL[0],
     fileName: 'aadhaar_front_aarav.jpg',
     filePath: '/uploads/aadhaar_aarav.jpg',
     documentType: 'Aadhaar Card',
@@ -48,7 +71,7 @@ const MOCK_DOCUMENTS: BackendDocument[] = [
   },
   {
     _id: 'doc-802',
-    user: MOCK_USERS[1],
+    user: MOCK_USERS_INITIAL[1],
     fileName: 'pan_card_priya.pdf',
     filePath: '/uploads/pan_priya.pdf',
     documentType: 'PAN Card',
@@ -82,7 +105,7 @@ const MOCK_DOCUMENTS: BackendDocument[] = [
   },
   {
     _id: 'doc-803',
-    user: MOCK_USERS[2],
+    user: MOCK_USERS_INITIAL[2],
     fileName: 'passport_rohan.jpg',
     filePath: '/uploads/passport_rohan.jpg',
     documentType: 'Passport',
@@ -116,7 +139,7 @@ const MOCK_DOCUMENTS: BackendDocument[] = [
   },
   {
     _id: 'doc-804',
-    user: MOCK_USERS[4],
+    user: MOCK_USERS_INITIAL[4],
     fileName: 'voter_id_vikram.jpg',
     filePath: '/uploads/voter_vikram.jpg',
     documentType: 'Voter ID',
@@ -141,7 +164,7 @@ const MOCK_DOCUMENTS: BackendDocument[] = [
   },
   {
     _id: 'doc-805',
-    user: MOCK_USERS[5],
+    user: MOCK_USERS_INITIAL[5],
     fileName: 'driving_licence_ananya.jpg',
     filePath: '/uploads/dl_ananya.jpg',
     documentType: 'Driving License',
@@ -164,6 +187,26 @@ const MOCK_DOCUMENTS: BackendDocument[] = [
     faceVerification: { match: true, confidence: 89.2 }
   }
 ];
+
+export function getStoredDocuments(): BackendDocument[] {
+  try {
+    const raw = localStorage.getItem(DOCS_STORAGE_KEY);
+    if (raw !== null) {
+      return JSON.parse(raw);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  return MOCK_DOCUMENTS_INITIAL;
+}
+
+export function saveStoredDocuments(docs: BackendDocument[]) {
+  try {
+    localStorage.setItem(DOCS_STORAGE_KEY, JSON.stringify(docs));
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 const MOCK_AUDIT_LOGS: BackendAuditLog[] = [
   {
@@ -193,7 +236,7 @@ const MOCK_AUDIT_LOGS: BackendAuditLog[] = [
   },
   {
     _id: 'log-103',
-    actor: MOCK_USERS[0],
+    actor: MOCK_USERS_INITIAL[0],
     actorEmail: 'aarav.sharma@example.com',
     actorRole: 'USER',
     action: 'DOCUMENT_UPLOADED',
@@ -233,32 +276,32 @@ const MOCK_AUDIT_LOGS: BackendAuditLog[] = [
 ];
 
 export async function getDashboardStats(): Promise<BackendStats> {
+  const currentUsers = getStoredUsers();
+  const currentDocs = getStoredDocuments();
   try {
     const data = await apiGet('/admin/stats');
     if (data && data.success && data.stats) return data;
-  } catch (err) {
-    // Graceful fallback
-  }
+  } catch (err) {}
 
   return {
     success: true,
     stats: {
       users: {
-        total: 1248,
-        active: 1180,
-        inactive: 68
+        total: currentUsers.length,
+        active: currentUsers.filter(u => u.isActive).length,
+        inactive: currentUsers.filter(u => !u.isActive).length
       },
       documents: {
-        total: 4892,
-        recentWeek: 412,
-        pendingReview: 28,
-        approved: 4210,
-        rejected: 342,
-        suspicious: 312
+        total: currentDocs.length,
+        recentWeek: currentDocs.length,
+        pendingReview: currentDocs.filter(d => d.reviewStatus === 'PENDING').length,
+        approved: currentDocs.filter(d => d.reviewStatus === 'APPROVED').length,
+        rejected: currentDocs.filter(d => d.reviewStatus === 'REJECTED').length,
+        suspicious: currentDocs.filter(d => d.fakeDocumentStatus === 'SUSPICIOUS' || d.fakeDocumentStatus === 'FORGED').length
       },
       risk: {
-        critical: 18,
-        high: 44
+        critical: currentDocs.filter(d => d.riskLevel === 'CRITICAL').length,
+        high: currentDocs.filter(d => d.riskLevel === 'HIGH').length
       }
     },
     recentAuditLogs: MOCK_AUDIT_LOGS
@@ -285,12 +328,15 @@ export async function getUsers(page: number = 1, limit: number = 20, search: str
     const query = new URLSearchParams({ page: String(page), limit: String(limit) });
     if (search) query.append('search', search);
     const data = await apiGet(`/admin/users?${query.toString()}`);
-    if (data && data.success) return data;
+    if (data && data.success && Array.isArray(data.users)) {
+      return data;
+    }
   } catch (err) {}
 
+  const currentUsers = getStoredUsers();
   const filtered = search.trim()
-    ? MOCK_USERS.filter(u => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()))
-    : MOCK_USERS;
+    ? currentUsers.filter(u => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()))
+    : currentUsers;
 
   return {
     success: true,
@@ -304,7 +350,12 @@ export async function getUsers(page: number = 1, limit: number = 20, search: str
 export async function createUser(userData: any) {
   try {
     const data = await apiPost('/admin/users', userData);
-    if (data && data.success) return data;
+    if (data && data.success && data.user) {
+      const list = getStoredUsers();
+      list.unshift(data.user);
+      saveStoredUsers(list);
+      return data;
+    }
   } catch (err) {}
 
   const newUser: BackendUser = {
@@ -315,18 +366,19 @@ export async function createUser(userData: any) {
     isActive: true,
     createdAt: new Date().toISOString()
   };
-  MOCK_USERS.unshift(newUser);
+  const list = getStoredUsers();
+  list.unshift(newUser);
+  saveStoredUsers(list);
   return { success: true, user: newUser };
 }
 
 export async function deleteUser(userId: string) {
   try {
-    const data = await apiDelete(`/admin/users/${userId}`);
-    if (data && data.success) return data;
+    await apiDelete(`/admin/users/${userId}`);
   } catch (err) {}
 
-  const idx = MOCK_USERS.findIndex(u => u._id === userId);
-  if (idx !== -1) MOCK_USERS.splice(idx, 1);
+  const list = getStoredUsers().filter(u => u._id !== userId);
+  saveStoredUsers(list);
   return { success: true, message: 'User removed successfully' };
 }
 
@@ -362,7 +414,7 @@ export async function getAdminDocuments(filtersOrPage: DocumentFilters | number 
     if (data && data.success) return data;
   } catch (err) {}
 
-  let docs = [...MOCK_DOCUMENTS];
+  let docs = getStoredDocuments();
   if (typeof filtersOrPage === 'object') {
     const f = filtersOrPage;
     if (f.reviewStatus && f.reviewStatus !== 'ALL') {
