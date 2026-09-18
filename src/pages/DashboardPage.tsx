@@ -283,7 +283,7 @@ export default function DashboardPage({ onNavigate }: Props) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
         <KpiCard
-          label="Total Users"
+          label="Total Officers"
           value={stats.stats?.users?.total || 0}
           trend="Real-time"
           color="#b5c070"

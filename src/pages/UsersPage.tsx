@@ -179,8 +179,8 @@ export default function UsersPage({ onReview }: Props) {
       <div style={{ flex:1, padding: '16px', overflowY:'auto', WebkitOverflowScrolling:'touch' }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:10 }}>
           <div>
-            <h1 style={{ fontSize:18, fontWeight:700, color:'#e8e0d0', margin:0 }}>User Management</h1>
-            <p style={{ fontSize:11, color:'#5a6a40', margin:'3px 0 0' }}>{users.length} users found</p>
+            <h1 style={{ fontSize:18, fontWeight:700, color:'#e8e0d0', margin:0 }}>Officers</h1>
+            <p style={{ fontSize:11, color:'#5a6a40', margin:'3px 0 0' }}>{users.length} officers found</p>
           </div>
           <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap' }}>
             {selectedUserIds.length > 0 && (
@@ -204,7 +204,7 @@ export default function UsersPage({ onReview }: Props) {
                 </button>
               </div>
             )}
-            <input className="admin-input" placeholder="Search name or email…" value={search} onChange={e=>setSearch(e.target.value)} style={{ width:160, padding:'6px 10px', fontSize:12 }}/>
+            <input className="admin-input" placeholder="Search officer name or email…" value={search} onChange={e=>setSearch(e.target.value)} style={{ width:180, padding:'6px 10px', fontSize:12 }}/>
             <button
               className="btn-primary"
               onClick={() => {
@@ -215,7 +215,7 @@ export default function UsersPage({ onReview }: Props) {
               }}
               style={{ padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer' }}
             >
-              + Create User
+              + Create Officer
             </button>
           </div>
         </div>
@@ -234,7 +234,7 @@ export default function UsersPage({ onReview }: Props) {
                       title={isAllSelected ? "Deselect All" : "Select All"}
                     />
                   </th>
-                  <th>User</th>
+                  <th>Officer</th>
                   <th>Contact</th>
                   <th>Role</th>
                   <th>Status</th>
@@ -244,9 +244,9 @@ export default function UsersPage({ onReview }: Props) {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={7} style={{ textAlign:'center', padding:20, color:'#5a6a40' }}>Loading users...</td></tr>
+                  <tr><td colSpan={7} style={{ textAlign:'center', padding:20, color:'#5a6a40' }}>Loading officers...</td></tr>
                 ) : users.length === 0 ? (
-                  <tr><td colSpan={7} style={{ textAlign:'center', padding:20, color:'#5a6a40' }}>No users found.</td></tr>
+                  <tr><td colSpan={7} style={{ textAlign:'center', padding:20, color:'#5a6a40' }}>No officers found.</td></tr>
                 ) : users.map(u => {
                   const isChecked = selectedUserIds.includes(u._id)
                   return (
@@ -363,7 +363,7 @@ export default function UsersPage({ onReview }: Props) {
       {showCreateModal && (
         <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(2px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding: 12 }}>
           <div className="card-1" style={{ width:'100%', maxWidth:420, borderRadius:8, padding:'20px 16px', background:'#11140c' }}>
-            <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#e8e0d0' }}>Create New User</h2>
+            <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#e8e0d0' }}>Create New Officer</h2>
             <form onSubmit={handleCreateUser} autoComplete="off" style={{ display:'flex', flexDirection:'column', gap:12 }}>
               {/* Trap inputs to prevent browser password manager auto-filling this admin modal */}
               <input type="text" name="fake_user_trap" style={{ display:'none' }} tabIndex={-1} aria-hidden="true" autoComplete="off" />
@@ -507,7 +507,7 @@ export default function UsersPage({ onReview }: Props) {
               <div style={{ display:'flex', gap:10, marginTop:16, justifyContent:'flex-end' }}>
                 <button type="button" className="btn-ghost" onClick={()=>{ setShowCreateModal(false); setCreateForm({ name: '', email: '', password: '', role: 'OFFICER' }); }} style={{ padding:'8px 16px', borderRadius:6 }}>Cancel</button>
                 <button type="submit" className="btn-primary" disabled={createLoading} style={{ padding:'8px 16px', borderRadius:6 }}>
-                  {createLoading ? 'Creating...' : 'Create User'}
+                  {createLoading ? 'Creating...' : 'Create Officer'}
                 </button>
               </div>
             </form>
@@ -519,9 +519,9 @@ export default function UsersPage({ onReview }: Props) {
       {userToDelete && (
         <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(2px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding: 12 }}>
           <div className="card-1" style={{ width:'100%', maxWidth:420, borderRadius:8, padding:'20px 16px', background:'#11140c' }}>
-            <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#c87878' }}>Deactivate User</h2>
+            <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#c87878' }}>Deactivate Officer</h2>
             <p style={{ fontSize:13, color:'#b8b098', margin:'0 0 16px' }}>
-              Are you sure you want to deactivate the user account for <strong>{userToDelete.name}</strong> ({userToDelete.email})?
+              Are you sure you want to deactivate the officer account for <strong>{userToDelete.name}</strong> ({userToDelete.email})?
             </p>
             <p style={{ fontSize:11, color:'#5a6a40', margin:'0 0 16px' }}>
               This will disable their access to the system. It does not delete their audit trail or submitted documents.
@@ -541,9 +541,9 @@ export default function UsersPage({ onReview }: Props) {
       {showBulkDeleteModal && (
         <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(2px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding: 12 }}>
           <div className="card-1" style={{ width:'100%', maxWidth:420, borderRadius:8, padding:'20px 16px', background:'#11140c' }}>
-            <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#c87878' }}>Delete Selected Users</h2>
+            <h2 style={{ margin:'0 0 16px', fontSize:16, color:'#c87878' }}>Delete Selected Officers</h2>
             <p style={{ fontSize:13, color:'#b8b098', margin:'0 0 16px' }}>
-              Are you sure you want to deactivate <strong>{selectedUserIds.length}</strong> selected user account{selectedUserIds.length > 1 ? 's' : ''}?
+              Are you sure you want to deactivate <strong>{selectedUserIds.length}</strong> selected officer account{selectedUserIds.length > 1 ? 's' : ''}?
             </p>
             <p style={{ fontSize:11, color:'#5a6a40', margin:'0 0 16px' }}>
               This action will deactivate access for all selected accounts simultaneously.

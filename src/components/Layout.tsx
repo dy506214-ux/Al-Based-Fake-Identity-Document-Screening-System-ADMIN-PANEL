@@ -21,7 +21,7 @@ interface LayoutProps {
 
 const PAGE_TITLES: Record<string, string> = {
   dashboard: 'Dashboard',
-  users: 'User Management',
+  users: 'Officers',
   documents: 'Documents',
   verification: 'Document Verification',
   review: 'Document Review',
@@ -61,7 +61,7 @@ interface NavRow { navId: string; pageId: PageType; iconKey: string; label: stri
 
 const navRows: NavRow[] = [
   { navId:'dashboard',     pageId:'dashboard',     iconKey:'dashboard',      label:'Dashboard',            group:'MAIN' },
-  { navId:'users',         pageId:'users',          iconKey:'users',          label:'Users',                group:'MAIN' },
+  { navId:'users',         pageId:'users',          iconKey:'users',          label:'Officers',             group:'MAIN' },
   { navId:'documents',     pageId:'documents',      iconKey:'documents',      label:'Documents',            group:'MAIN' },
   { navId:'verification',  pageId:'verification',   iconKey:'verification',   label:'Verification',         group:'MAIN' },
   { navId:'history',       pageId:'history',        iconKey:'history',        label:'Verification History', group:'MAIN' },
