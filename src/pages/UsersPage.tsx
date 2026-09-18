@@ -16,6 +16,7 @@ export default function UsersPage({ onReview }: Props) {
   // Create User State
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [createForm, setCreateForm] = useState({ name: '', email: '', password: '', role: 'USER' })
+  const [showCreatePassword, setShowCreatePassword] = useState(false)
   const [createLoading, setCreateLoading] = useState(false)
   const [createError, setCreateError] = useState('')
 
@@ -240,7 +241,48 @@ export default function UsersPage({ onReview }: Props) {
               </div>
               <div>
                 <label style={{ display:'block', fontSize:11, color:'#6b7a40', marginBottom:4 }}>Password</label>
-                <input required type="password" minLength={6} className="admin-input" style={{ width:'100%', boxSizing:'border-box' }} value={createForm.password} onChange={e=>setCreateForm({...createForm, password: e.target.value})} />
+                <div style={{ position:'relative' }}>
+                  <input
+                    required
+                    type={showCreatePassword ? 'text' : 'password'}
+                    minLength={6}
+                    className="admin-input"
+                    style={{ width:'100%', boxSizing:'border-box', paddingRight:36 }}
+                    value={createForm.password}
+                    onChange={e=>setCreateForm({...createForm, password: e.target.value})}
+                  />
+                  <button
+                    type="button"
+                    onClick={()=>setShowCreatePassword(p=>!p)}
+                    style={{
+                      position:'absolute',
+                      right:10,
+                      top:'50%',
+                      transform:'translateY(-50%)',
+                      background:'none',
+                      border:'none',
+                      cursor:'pointer',
+                      color:'#7a8a58',
+                      display:'flex',
+                      alignItems:'center',
+                      padding:2
+                    }}
+                    title={showCreatePassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showCreatePassword ? (
+                      <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3">
+                        <path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/>
+                        <circle cx="7" cy="7" r="1.5"/>
+                        <line x1="2" y1="2" x2="12" y2="12"/>
+                      </svg>
+                    ) : (
+                      <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3">
+                        <path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/>
+                        <circle cx="7" cy="7" r="1.5"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
               <div>
                 <label style={{ display:'block', fontSize:11, color:'#6b7a40', marginBottom:4 }}>Role</label>
