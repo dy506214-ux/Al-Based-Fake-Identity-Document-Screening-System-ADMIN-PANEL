@@ -7,8 +7,10 @@ import UsersPage from './pages/UsersPage'
 import DocumentsPage, { DocumentFilterState } from './pages/DocumentsPage'
 import DocumentReviewPage from './pages/DocumentReviewPage'
 import VerificationHistoryPage from './pages/VerificationHistoryPage'
+import NotificationsPage from './pages/NotificationsPage'
 import { getProfile } from './services/authApi'
 import { getToken, removeToken } from './services/apiClient'
+import { startLiveNotificationStream } from './services/notificationService'
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -69,6 +71,7 @@ export default function App() {
     }
 
     initAuth()
+    startLiveNotificationStream()
     window.addEventListener('auth:unauthorized', handleUnauthorized)
     return () => window.removeEventListener('auth:unauthorized', handleUnauthorized)
   }, [])
@@ -136,11 +139,7 @@ export default function App() {
       case 'settings':
         return <SettingsPage />
       case 'notifications':
-        return (
-          <div style={{ padding:32, color:'#5a6a40', fontSize:13 }}>
-            Open the notifications bell in the header to view alerts.
-          </div>
-        )
+        return <NotificationsPage onNavigate={handleNavigate} />
       default:
         return (
           <div style={{ padding:40, textAlign:'center' }}>

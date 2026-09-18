@@ -1,5 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { PageType, BackendUser } from '../types'
+import {
+  getNotifications,
+  getUnreadCount,
+  markAsRead,
+  markAllAsRead,
+  AppNotification
+} from '../services/notificationService'
 
 interface LayoutProps {
   currentPage: PageType
@@ -64,44 +71,95 @@ const navRows: NavRow[] = [
 ]
 
 /* ── Notifications panel ────────────────────────── */
-const NotificationsPanel = ({ onClose }: { onClose: () => void }) => {
-  const items = [
-    { type:'alert', msg:'Mismatch detected: Rahul Verma — Aadhaar Card', time:'2 min ago', color:'#c87878' },
-    { type:'info',  msg:'New document submitted by Kavita Sharma', time:'14 min ago', color:'#7899cc' },
-    { type:'warn',  msg:'Needs Review: Neha Gupta — Visa pending since 8h', time:'1 hr ago', color:'#cc9944' },
-    { type:'ok',    msg:'Verified: Aman Singh — Aadhaar Card approved', time:'3 hrs ago', color:'#68c87a' },
-    { type:'alert', msg:'Suspicious document flagged: Suresh Kumar — Passport', time:'5 hrs ago', color:'#c87878' },
-    { type:'info',  msg:'New user registered: Rohit Agarwal', time:'8 hrs ago', color:'#7899cc' },
-  ]
+const NotificationsPanel = ({ onClose, onNavigate }: { onClose: () => void; onNavigate: (p: PageType, nav: string) => void }) => {
+  const [items, setItems] = useState<AppNotification[]>([])
+
+  const load = () => setItems(getNotifications())
+
+  useEffect(() => {
+    load()
+    const handleUpdate = () => load()
+    window.addEventListener('notifications:updated', handleUpdate)
+    return () => window.removeEventListener('notifications:updated', handleUpdate)
+  }, [])
+
+  const unreadCount = items.filter(n => !n.read).length
+
+  const getColor = (type: string) => {
+    if (type === 'CRITICAL') return '#c87878'
+    if (type === 'SUSPICIOUS') return '#cc9944'
+    if (type === 'VERIFIED') return '#68c87a'
+    if (type === 'SYSTEM') return '#b5c070'
+    return '#7899cc'
+  }
+
   return (
     <>
       <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:49 }}/>
-      <div className="animate-fade-in" style={{ position:'fixed', right:16, top:64, width:360, background:'#141810', border:'1px solid rgba(74,90,42,0.35)', borderRadius:10, zIndex:50, boxShadow:'0 12px 48px rgba(0,0,0,0.7)', overflow:'hidden' }}>
+      <div className="animate-fade-in" style={{ position:'fixed', right:16, top:64, width:380, background:'#141810', border:'1px solid rgba(74,90,42,0.35)', borderRadius:10, zIndex:50, boxShadow:'0 12px 48px rgba(0,0,0,0.7)', overflow:'hidden' }}>
         <div style={{ padding:'14px 18px 12px', borderBottom:'1px solid rgba(74,90,42,0.2)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <div>
-            <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0' }}>Notifications</div>
-            <div style={{ fontSize:10, color:'#5a6a40', marginTop:2 }}>{items.length} unread alerts</div>
+            <div style={{ fontSize:13, fontWeight:700, color:'#e8e0d0', display:'flex', alignItems:'center', gap:8 }}>
+              <span>Live Alerts</span>
+              {unreadCount > 0 && (
+                <span style={{ fontSize:10, fontWeight:700, background:'#FF9933', color:'#060803', padding:'1px 6px', borderRadius:10 }}>
+                  {unreadCount} new
+                </span>
+              )}
+            </div>
+            <div style={{ fontSize:10, color:'#5a6a40', marginTop:2 }}>Real-time verification &amp; screening feed</div>
           </div>
           <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'#5a6a40', padding:4 }}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>
           </button>
         </div>
-        <div style={{ maxHeight:400, overflowY:'auto' }}>
-          {items.map((item,i) => (
-            <div key={i} style={{ padding:'12px 18px', borderBottom:'1px solid rgba(74,90,42,0.1)', display:'flex', gap:12, alignItems:'flex-start', cursor:'pointer', transition:'background 0.12s' }}
-              onMouseOver={e=>(e.currentTarget.style.background='rgba(74,90,42,0.08)')}
-              onMouseOut={e=>(e.currentTarget.style.background='transparent')}
-            >
-              <div style={{ width:7, height:7, borderRadius:'50%', background:item.color, marginTop:5, flexShrink:0 }}/>
-              <div style={{ flex:1 }}>
-                <div style={{ fontSize:12, color:'#d0c8b8', lineHeight:1.4 }}>{item.msg}</div>
-                <div style={{ fontSize:10, color:'#4a5a30', marginTop:3 }}>{item.time}</div>
-              </div>
+        <div style={{ maxHeight:360, overflowY:'auto' }}>
+          {items.length === 0 ? (
+            <div style={{ padding:24, textAlign:'center', color:'#5a6a40', fontSize:12 }}>
+              No notifications yet.
             </div>
-          ))}
+          ) : (
+            items.slice(0, 8).map((item) => (
+              <div
+                key={item.id}
+                onClick={() => {
+                  markAsRead(item.id)
+                  if (item.targetPage) {
+                    onNavigate(item.targetPage, item.targetNav || item.targetPage)
+                    onClose()
+                  }
+                }}
+                style={{
+                  padding:'12px 16px',
+                  borderBottom:'1px solid rgba(74,90,42,0.1)',
+                  display:'flex',
+                  gap:12,
+                  alignItems:'flex-start',
+                  cursor:'pointer',
+                  background: item.read ? 'transparent' : 'rgba(74,90,42,0.12)',
+                  transition:'background 0.12s'
+                }}
+                onMouseOver={e=>(e.currentTarget.style.background='rgba(74,90,42,0.18)')}
+                onMouseOut={e=>(e.currentTarget.style.background=item.read?'transparent':'rgba(74,90,42,0.12)')}
+              >
+                <div style={{ width:8, height:8, borderRadius:'50%', background:getColor(item.type), marginTop:5, flexShrink:0, boxShadow: !item.read ? `0 0 6px ${getColor(item.type)}` : 'none' }}/>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:12, fontWeight: item.read ? 500 : 700, color:'#d0c8b8', lineHeight:1.3 }}>{item.title}</div>
+                  <div style={{ fontSize:11, color:'#8a9a68', marginTop:3, lineHeight:1.4 }}>{item.message}</div>
+                  <div style={{ fontSize:9, color:'#4a5a30', marginTop:4 }}>{new Date(item.timestamp).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}</div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
-        <div style={{ padding:'10px 18px', borderTop:'1px solid rgba(74,90,42,0.15)' }}>
-          <button style={{ background:'none', border:'none', cursor:'pointer', fontSize:12, color:'#6b7a40' }}>Mark all as read</button>
+        <div style={{ padding:'10px 16px', borderTop:'1px solid rgba(74,90,42,0.15)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <button onClick={markAllAsRead} style={{ background:'none', border:'none', cursor:'pointer', fontSize:11, color:'#8b9a5a', fontWeight:600 }}>Mark all as read</button>
+          <button
+            onClick={() => { onNavigate('notifications', 'notifications'); onClose(); }}
+            style={{ background:'none', border:'none', cursor:'pointer', fontSize:11, color:'#FF9933', fontWeight:700 }}
+          >
+            View All Notifications →
+          </button>
         </div>
       </div>
     </>
@@ -210,6 +268,13 @@ export const SettingsPage = () => {
 export default function Layout({ currentPage, navSelection, onNavigate, isSidebarOpen, onToggleSidebar, onLogout, currentUser, children }: LayoutProps) {
   const [showNotif, setShowNotif] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(getUnreadCount())
+
+  useEffect(() => {
+    const handleUpdate = () => setUnreadCount(getUnreadCount())
+    window.addEventListener('notifications:updated', handleUpdate)
+    return () => window.removeEventListener('notifications:updated', handleUpdate)
+  }, [])
 
   return (
     <div style={{ display:'flex', height:'100%', background:'#0d0f08', fontFamily:'Inter,system-ui,sans-serif' }}>
@@ -303,11 +368,54 @@ export default function Layout({ currentPage, navSelection, onNavigate, isSideba
 
           {/* Notifications button */}
           <div style={{ position:'relative' }}>
-            <button onClick={()=>setShowNotif(p=>!p)} style={{ position:'relative', background:'rgba(74,90,42,0.12)', border:'1px solid rgba(74,90,42,0.25)', borderRadius:6, padding:'5px 8px', cursor:'pointer', color:'#8b9a5a', display:'flex', alignItems:'center' }}>
+            <button
+              onClick={()=>setShowNotif(p=>!p)}
+              style={{
+                position:'relative',
+                background: unreadCount > 0 ? 'rgba(255,153,51,0.15)' : 'rgba(74,90,42,0.12)',
+                border: unreadCount > 0 ? '1px solid rgba(255,153,51,0.4)' : '1px solid rgba(74,90,42,0.25)',
+                borderRadius:6,
+                padding:'5px 8px',
+                cursor:'pointer',
+                color: unreadCount > 0 ? '#FF9933' : '#8b9a5a',
+                display:'flex',
+                alignItems:'center',
+                transition:'all 0.2s'
+              }}
+              title="Real-time Alerts"
+            >
               {Icons.bell}
-              <span style={{ position:'absolute', top:-4, right:-4, background:'#FF9933', color:'#1a0800', fontSize:9, fontWeight:700, borderRadius:'50%', width:14, height:14, display:'flex', alignItems:'center', justifyContent:'center' }}>6</span>
+              {unreadCount > 0 && (
+                <span
+                  className="animate-pulse"
+                  style={{
+                    position:'absolute',
+                    top:-4,
+                    right:-4,
+                    background:'#FF9933',
+                    color:'#080a05',
+                    fontSize:9,
+                    fontWeight:800,
+                    borderRadius:'50%',
+                    minWidth:16,
+                    height:16,
+                    padding:'0 2px',
+                    display:'flex',
+                    alignItems:'center',
+                    justifyContent:'center',
+                    boxShadow:'0 0 8px rgba(255,153,51,0.6)'
+                  }}
+                >
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
             </button>
-            {showNotif && <NotificationsPanel onClose={()=>setShowNotif(false)}/>}
+            {showNotif && (
+              <NotificationsPanel
+                onClose={()=>setShowNotif(false)}
+                onNavigate={onNavigate}
+              />
+            )}
           </div>
 
           {/* Admin profile */}
